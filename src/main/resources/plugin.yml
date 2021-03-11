@@ -1,0 +1,13 @@
+name: "Acolytes"
+main: "com.sxtanna.mc.acolytes.AcolytesPlugin"
+
+version: "@version@"
+authors: ["Sxtanna"]
+website: "https://www.sxtanna.com"
+
+api-version: "1.13"
+
+softdepend:
+  - "Vault"
+  - "TokenManager"
+  - "PlaceholderAPI"

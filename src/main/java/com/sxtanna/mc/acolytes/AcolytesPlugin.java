@@ -37,7 +37,6 @@ public final class AcolytesPlugin extends JavaPlugin
 	}
 
 
-
 	@NotNull
 	private final AcolytesConfig config = new AcolytesConfig(this);
 	@NotNull
@@ -97,16 +96,22 @@ public final class AcolytesPlugin extends JavaPlugin
 
 		manager.getCommandContexts().registerContext(Pet.class, context ->
 		{
+			final Player player = ((OnlinePlayer) context.getResolvedArg(OnlinePlayer.class)).getPlayer();
+
 			if (context.hasFlag("active"))
 			{
 				return getModule().getController()
-				                  .getActive(((Player) context.getResolvedArg(Player.class)))
+				                  .getActive(player)
 				                  .orElseThrow(() -> new InvalidCommandArgument("no active pet found!", false));
 			}
 
 			if (context.hasFlag("target"))
 			{
-				System.out.println("resolving target pet");
+				final String uuid = context.popFirstArg();
+
+				return getModule().getController()
+				                  .getByUuid(player, uuid)
+				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find pet named %s!", uuid), false));
 			}
 
 			return null;

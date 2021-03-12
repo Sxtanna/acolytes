@@ -56,6 +56,9 @@ public final class AcolytesConfig extends SettingsManagerImpl
 				newProperty("plugin.pet.custom-name.max", 16);
 
 
+		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK =
+				newProperty("plugin.pet.details.head-look", false);
+
 		public static final Property<Double> PET_PATHING_SPEED =
 				newProperty("plugin.pet.pathing.speed", 1.25);
 

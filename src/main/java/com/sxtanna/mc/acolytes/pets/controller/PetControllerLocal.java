@@ -89,7 +89,8 @@ public final class PetControllerLocal implements PetController, Listener
 		provider.initialize();
 
 		final PetEntity entity = provider.spawn(player.getLocation(),
-		                                        new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
+		                                        new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
+		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
 		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
 		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX)));
 		entity.setTargetEntity(player);

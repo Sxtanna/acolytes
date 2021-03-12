@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Contract;
 public final class PetConfig
 {
 
+	private final boolean headLook;
+
 	private final double followSpeed;
 
 	private final double followRangeMin;
@@ -12,14 +14,21 @@ public final class PetConfig
 
 
 	@Contract(pure = true)
-	public PetConfig(final double followSpeed, final double followRangeMin, final double followRangeMax)
+	public PetConfig(final boolean headLook, final double followSpeed, final double followRangeMin, final double followRangeMax)
 	{
+		this.headLook    = headLook;
 		this.followSpeed = followSpeed;
 
 		this.followRangeMin = followRangeMin;
 		this.followRangeMax = followRangeMax;
 	}
 
+
+	@Contract(pure = true)
+	public boolean isHeadLook()
+	{
+		return headLook;
+	}
 
 	@Contract(pure = true)
 	public double getFollowSpeed()

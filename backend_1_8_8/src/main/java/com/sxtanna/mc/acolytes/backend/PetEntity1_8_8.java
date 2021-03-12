@@ -41,7 +41,11 @@ public final class PetEntity1_8_8 extends EntityZombie implements PetEntity
 
 		this.goalSelector.a(0, new PathfinderGoalFloat(this));
 		this.goalSelector.a(5, new PathfinderGoalFollowPetEntityOwner());
-		this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+
+		if (config.isHeadLook())
+		{
+			this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+		}
 	}
 
 

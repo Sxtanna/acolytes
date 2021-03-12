@@ -20,7 +20,9 @@ public final class PetControllerLocal implements PetController
 
 
 	@NotNull
-	private final Map<UUID, Pet> active = new HashMap<>();
+	private final Map<UUID, Pet>              active = new HashMap<>();
+	@NotNull
+	private final Map<UUID, Map<String, Pet>> cached = new HashMap<>();
 
 
 	public PetControllerLocal(@NotNull final AcolytesPlugin plugin)

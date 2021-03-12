@@ -14,6 +14,7 @@ import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -45,15 +46,17 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load()
 	{
-		Bukkit.getServer().getPluginManager().registerEvents(this, this.plugin);
 		Bukkit.getOnlinePlayers().forEach(this::load);
+
+		Bukkit.getServer().getPluginManager().registerEvents(this, this.plugin);
 	}
 
 	@Override
 	public void kill()
 	{
-		HandlerList.unregisterAll(this);
 		Bukkit.getOnlinePlayers().forEach(this::kill);
+
+		HandlerList.unregisterAll(this);
 	}
 
 
@@ -91,11 +94,11 @@ public final class PetControllerLocal implements PetController, Listener
 		      .whenComplete((pass, fail) -> {
 			      if (fail != null)
 			      {
-				      plugin.getLogger().log(Level.SEVERE, String.format("failed to select pets from repository for %s", player.getUniqueId()), fail);
+				      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to select pets from repository for %s", player.getUniqueId()), fail);
 			      }
 			      else if (pass != null)
 			      {
-				      cached.put(player.getUniqueId(), pass.stream()
+				      this.cached.put(player.getUniqueId(), pass.stream()
 				                                           .collect(toMap(pet -> pet.select(PetAttributes.UUID),
 				                                                          Function.identity())));
 			      }
@@ -104,13 +107,19 @@ public final class PetControllerLocal implements PetController, Listener
 
 	private void kill(@NotNull final Player player)
 	{
+		final Collection<Pet> values = Optional.ofNullable(this.cached.remove(player.getUniqueId())).map(Map::values).orElse(null);
+		if (values == null)
+		{
+			return;
+		}
+
 		plugin.getModule()
 		      .getRepository()
-		      .insert(player.getUniqueId(), this.cached.remove(player.getUniqueId()).values())
+		      .insert(player.getUniqueId(), values)
 		      .whenComplete((pass, fail) -> {
 			      if (fail != null)
 			      {
-				      plugin.getLogger().log(Level.SEVERE, String.format("failed to insert pets into repository for %s", player.getUniqueId()), fail);
+				      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to insert pets into repository for %s", player.getUniqueId()), fail);
 			      }
 		      });
 	}

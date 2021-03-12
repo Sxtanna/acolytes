@@ -99,8 +99,8 @@ public final class PetControllerLocal implements PetController, Listener
 			      else if (pass != null)
 			      {
 				      this.cached.put(player.getUniqueId(), pass.stream()
-				                                           .collect(toMap(pet -> pet.select(PetAttributes.UUID),
-				                                                          Function.identity())));
+				                                                .collect(toMap(pet -> pet.select(PetAttributes.UUID),
+				                                                               Function.identity())));
 			      }
 		      });
 	}

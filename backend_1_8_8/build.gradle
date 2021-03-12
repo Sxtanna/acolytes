@@ -1,0 +1,7 @@
+group 'com.sxtanna.mc'
+version '1.0.0'
+
+dependencies {
+	compileOnly project(":backend")
+	compileOnly name: "spigot-1.8.8"
+}

@@ -58,6 +58,9 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         transitive false // ignore transitive dependencies (we don't need them)
     }
+    
+    implementation project(":backend")
+    implementation project(":backend_1_8_8")
 }
 
 test {

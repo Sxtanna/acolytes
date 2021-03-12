@@ -86,7 +86,6 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@CommandPermission("pets.admin.name")
 	public void name(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("active") final Pet pet, @NotNull @Single final String name)
 	{
-		final String oldName = pet.select(PetAttributes.NAME);
 		final String newName = Colors.colorize(name);
 
 		if (newName.length() < customNameLengthMin.get() || newName.length() > customNameLengthMax.get())
@@ -97,7 +96,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 			                                 false);
 		}
 
-		pet.update(PetAttributes.NAME, newName);
+		final String oldName = pet.update(PetAttributes.NAME, newName);
 
 
 		// todo: send message "pet name has been updated from `oldName` to `newName`"

@@ -57,7 +57,6 @@ public final class CommandAcolytes extends BaseCommand
 	@CommandPermission("pets.user.name")
 	public void name(@NotNull final Player player, @NotNull @Flags("active") final Pet pet, @NotNull @Single final String name)
 	{
-		final String oldName = pet.select(PetAttributes.NAME);
 		final String newName = Colors.colorize(name);
 
 		if (newName.length() < customNameLengthMin.get() || newName.length() > customNameLengthMax.get())
@@ -68,7 +67,7 @@ public final class CommandAcolytes extends BaseCommand
 			                                 false);
 		}
 
-		pet.update(PetAttributes.NAME, newName);
+		final String oldName = pet.update(PetAttributes.NAME, newName);
 
 		// todo: send message "pet name has been updated from `oldName` to `newName`"
 

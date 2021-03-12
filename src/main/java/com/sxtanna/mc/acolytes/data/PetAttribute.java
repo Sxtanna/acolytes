@@ -9,8 +9,18 @@ public interface PetAttribute<T>
 
 	@NotNull Class<T> getType();
 
+	default boolean isMutable()
+	{
+		return true;
+	}
+
 
 	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final T defaultAttr)
+	{
+		return make(type, defaultAttr, true);
+	}
+
+	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final T defaultAttr, final boolean mutable)
 	{
 		return new PetAttribute<T>()
 		{
@@ -24,6 +34,12 @@ public interface PetAttribute<T>
 			public @NotNull Class<T> getType()
 			{
 				return type;
+			}
+
+			@Override
+			public boolean isMutable()
+			{
+				return mutable;
 			}
 		};
 	}

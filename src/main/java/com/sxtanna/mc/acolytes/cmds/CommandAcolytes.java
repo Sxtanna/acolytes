@@ -10,7 +10,6 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.conf.Resolved;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
-import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.menu.impl.MenuPets;
 import com.sxtanna.mc.acolytes.util.Colors;
 
@@ -48,8 +47,7 @@ public final class CommandAcolytes extends BaseCommand
 	@CommandPermission("pets.user.menu")
 	public void def(@NotNull final Player player)
 	{
-		final Menu menu = new MenuPets(plugin);
-		menu.open(player);
+		new MenuPets(plugin, player).open(player);
 	}
 
 

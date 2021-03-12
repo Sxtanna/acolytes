@@ -48,6 +48,8 @@ public final class CommandAcolytes extends BaseCommand
 	public void def(@NotNull final Player player)
 	{
 		new MenuPets(plugin, player).open(player);
+
+		plugin.getModule().getController().load(player, null);
 	}
 
 

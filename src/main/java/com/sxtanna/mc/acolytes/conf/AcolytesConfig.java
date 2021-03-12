@@ -55,6 +55,16 @@ public final class AcolytesConfig extends SettingsManagerImpl
 		public static final Property<Integer> PET_CUSTOM_NAME_LENGTH_MAX =
 				newProperty("plugin.pet.custom-name.max", 16);
 
+
+		public static final Property<Double> PET_PATHING_SPEED =
+				newProperty("plugin.pet.pathing.speed", 1.25);
+
+		public static final Property<Double> PET_PATHING_RANGE_MIN =
+				newProperty("plugin.pet.pathing.range.min", 10.0);
+
+		public static final Property<Double> PET_PATHING_RANGE_MAX =
+				newProperty("plugin.pet.pathing.range.max", 5.0);
+
 	}
 
 

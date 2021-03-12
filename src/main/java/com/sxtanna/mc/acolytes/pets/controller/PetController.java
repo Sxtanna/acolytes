@@ -8,6 +8,7 @@ import com.sxtanna.mc.acolytes.base.State;
 import com.sxtanna.mc.acolytes.data.Pet;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface PetController extends State
 {
@@ -19,10 +20,20 @@ public interface PetController extends State
 	void kill();
 
 
+	@NotNull Optional<Pet> getActive(@NotNull final UUID player);
 
-	@NotNull Optional<Pet> getActive(@NotNull final Player player);
+	default @NotNull Optional<Pet> getActive(@NotNull final Player player)
+	{
+		return getActive(player.getUniqueId());
+	}
 
-	@NotNull Optional<Pet> getByName(@NotNull final Player player, @NotNull final String name);
+
+	@NotNull Optional<Pet> getByUuid(@NotNull final UUID player, @NotNull final String uuid);
+
+	default @NotNull Optional<Pet> getByUuid(@NotNull final Player player, @NotNull final String uuid)
+	{
+		return getByUuid(player.getUniqueId(), uuid);
+	}
 
 
 	void load(@NotNull final Player player, @NotNull final Pet pet);

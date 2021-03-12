@@ -45,15 +45,15 @@ public final class PetControllerLocal implements PetController
 
 
 	@Override
-	public @NotNull Optional<Pet> getActive(@NotNull final Player player)
+	public @NotNull Optional<Pet> getActive(@NotNull final UUID player)
 	{
-		return Optional.ofNullable(this.active.get(player.getUniqueId()));
+		return Optional.ofNullable(this.active.get(player));
 	}
 
 	@Override
-	public @NotNull Optional<Pet> getByName(@NotNull final Player player, @NotNull final String name)
+	public @NotNull Optional<Pet> getByUuid(@NotNull final UUID player, @NotNull final String uuid)
 	{
-		return Optional.empty();
+		return Optional.ofNullable(this.cached.get(player)).map(cached -> cached.get(uuid));
 	}
 
 

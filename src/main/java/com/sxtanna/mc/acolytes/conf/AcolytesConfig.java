@@ -96,6 +96,7 @@ public final class AcolytesConfig extends SettingsManagerImpl
 
 	}
 
+
 	public static final class Costs implements SettingsHolder
 	{
 

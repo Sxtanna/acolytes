@@ -7,6 +7,8 @@ public interface PetAttribute<T>
 
 	@NotNull T getDefaultAttr();
 
+	@NotNull String getName();
+
 	@NotNull Class<T> getType();
 
 	default boolean isMutable()
@@ -15,12 +17,12 @@ public interface PetAttribute<T>
 	}
 
 
-	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final T defaultAttr)
+	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final String name, @NotNull final T defaultAttr)
 	{
-		return make(type, defaultAttr, true);
+		return make(type, name, defaultAttr, true);
 	}
 
-	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final T defaultAttr, final boolean mutable)
+	static <T> PetAttribute<T> make(@NotNull final Class<T> type, @NotNull final String name, @NotNull final T defaultAttr, final boolean mutable)
 	{
 		return new PetAttribute<T>()
 		{
@@ -28,6 +30,13 @@ public interface PetAttribute<T>
 			public @NotNull T getDefaultAttr()
 			{
 				return defaultAttr;
+			}
+
+
+			@Override
+			public @NotNull String getName()
+			{
+				return name;
 			}
 
 			@Override

@@ -84,6 +84,7 @@ public final class PetControllerLocal implements PetController, Listener
 	{
 		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(),
 		                                                                new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK_AND_PITCH),
 
 		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING),
 		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_SPEED),

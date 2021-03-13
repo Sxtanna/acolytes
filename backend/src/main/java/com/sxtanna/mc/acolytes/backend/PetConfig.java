@@ -6,6 +6,7 @@ public final class PetConfig
 {
 
 	private final boolean headLook;
+	private final boolean headLookAndPitch;
 
 
 	private final boolean bobbing;
@@ -22,9 +23,10 @@ public final class PetConfig
 
 
 	@Contract(pure = true)
-	public PetConfig(final boolean headLook, final boolean bobbing, final double bobbingSpeed, final double bobbingRangeShift, final double bobbingRangeLimit, final double followSpeed, final double followRangeMin, final double followRangeMax)
+	public PetConfig(final boolean headLook, final boolean headLookAndPitch, final boolean bobbing, final double bobbingSpeed, final double bobbingRangeShift, final double bobbingRangeLimit, final double followSpeed, final double followRangeMin, final double followRangeMax)
 	{
 		this.headLook = headLook;
+		this.headLookAndPitch = headLookAndPitch;
 
 		this.bobbing           = bobbing;
 		this.bobbingSpeed      = bobbingSpeed;
@@ -41,6 +43,12 @@ public final class PetConfig
 	public boolean isHeadLook()
 	{
 		return headLook;
+	}
+
+	@Contract(pure = true)
+	public boolean isHeadLookAndPitch()
+	{
+		return headLookAndPitch;
 	}
 
 

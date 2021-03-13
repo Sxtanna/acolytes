@@ -58,6 +58,8 @@ public final class AcolytesConfig extends SettingsManagerImpl
 
 		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK =
 				newProperty("plugin.pet.details.head-look.enabled", true);
+		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK_AND_PITCH =
+				newProperty("plugin.pet.details.head-look.and-pitch", true);
 
 
 		public static final Property<Boolean> PET_DETAILS_BOBBING =

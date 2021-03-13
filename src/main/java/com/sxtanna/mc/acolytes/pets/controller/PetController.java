@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import com.sxtanna.mc.acolytes.base.State;
 import com.sxtanna.mc.acolytes.data.Pet;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,6 +21,16 @@ public interface PetController extends State
 	void kill();
 
 
+	@NotNull Map<String, Pet> getLoadedPets();
+
+	@NotNull Map<String, Pet> getPlayerPets(@NotNull final UUID player);
+
+	default @NotNull Map<String, Pet> getPlayerPets(@NotNull final Player player)
+	{
+		return getPlayerPets(player.getUniqueId());
+	}
+
+
 	@NotNull Optional<Pet> getActive(@NotNull final UUID player);
 
 	default @NotNull Optional<Pet> getActive(@NotNull final Player player)
@@ -27,6 +38,8 @@ public interface PetController extends State
 		return getActive(player.getUniqueId());
 	}
 
+
+	@NotNull Optional<Pet> getByUuid(@NotNull final String uuid);
 
 	@NotNull Optional<Pet> getByUuid(@NotNull final UUID player, @NotNull final String uuid);
 

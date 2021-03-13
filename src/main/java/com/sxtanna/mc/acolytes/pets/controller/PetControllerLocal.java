@@ -21,6 +21,7 @@ import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +38,8 @@ public final class PetControllerLocal implements PetController, Listener
 	private final AcolytesPlugin plugin;
 
 
+	@NotNull
+	private final Map<String, Pet>            loaded = new HashMap<>();
 	@NotNull
 	private final Map<UUID, Pet>              active = new HashMap<>();
 	@NotNull
@@ -67,9 +70,27 @@ public final class PetControllerLocal implements PetController, Listener
 
 
 	@Override
+	public @NotNull Map<String, Pet> getLoadedPets()
+	{
+		return this.loaded;
+	}
+
+	@Override
+	public @NotNull Map<String, Pet> getPlayerPets(@NotNull final UUID player)
+	{
+		return Optional.ofNullable(this.cached.get(player)).orElse(Collections.emptyMap());
+	}
+
+	@Override
 	public @NotNull Optional<Pet> getActive(@NotNull final UUID player)
 	{
 		return Optional.ofNullable(this.active.get(player));
+	}
+
+	@Override
+	public @NotNull Optional<Pet> getByUuid(@NotNull final String uuid)
+	{
+		return Optional.ofNullable(this.loaded.get(uuid));
 	}
 
 	@Override

@@ -112,9 +112,6 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 	private final class PetEntityGoalHeadLook implements PetEntityGoal
 	{
 
-		private static final double _2PI = 2 * Math.PI;
-
-
 		@NotNull
 		private final AtomicBoolean started = new AtomicBoolean();
 

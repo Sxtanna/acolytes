@@ -15,6 +15,7 @@ import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,11 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 
 	}
 
+	@Override
+	public void move(final double x, final double y, final double z)
+	{
+		super.move(x, 0, z);
+	}
 
 	@Override
 	public void K()
@@ -106,6 +112,9 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 	private final class PetEntityGoalHeadLook implements PetEntityGoal
 	{
 
+		private static final double _2PI = 2 * Math.PI;
+
+
 		@NotNull
 		private final AtomicBoolean started = new AtomicBoolean();
 
@@ -132,10 +141,21 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 		@Override
 		public void update()
 		{
-			final Location location = getBukkitEntity().getLocation();
-			location.setDirection(target.getBukkitEntity().getLocation().toVector().subtract(location.toVector()));
+			double vecX = target.locX;
+			double vecY = target.locY;
+			double vecZ = target.locZ;
 
-			setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+			vecX -= locX;
+			vecY -= locY;
+			vecZ -= locZ;
+
+			lastYaw = yaw = ((float) Math.toDegrees((Math.atan2(-vecX, vecZ) + _2PI) % _2PI)) % 360.0f;
+
+			if (config.isHeadLookAndPitch())
+			{
+				final float pitch = ((vecX == 0 && vecZ == 0) ? (vecY > 0 ? -90f : +90f) : (float) Math.toDegrees(Math.atan(-vecY / Math.sqrt((vecX * vecX) + (vecZ * vecZ))))) % 360.0f;
+				setHeadPose(new Vector3f(pitch, 0.0f, 0.0f));
+			}
 		}
 
 		@Override
@@ -198,6 +218,8 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 		public void cancel()
 		{
 			started.set(false);
+			shifted.set(0.0);
+			upwards.set(false);
 		}
 
 	}
@@ -231,12 +253,25 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 		@Override
 		public void update()
 		{
-			final Vector vector = target.getBukkitEntity().getLocation().toVector().subtract(getBukkitEntity().getLocation().toVector()).normalize();
-			vector.multiply(config.getFollowSpeed() * 0.25);
+			double vecX = target.locX;
+			double vecY = target.locY;
+			double vecZ = target.locZ;
 
-			locX += vector.getX();
-			locY += vector.getY();
-			locZ += vector.getZ();
+			vecX -= locX;
+			vecY -= locY;
+			vecZ -= locZ;
+
+			final double len = Math.sqrt((vecX * vecX) + (vecY * vecY) + (vecZ * vecZ));
+			vecX /= len;
+			vecY /= len;
+			vecZ /= len;
+
+			final double mul = config.getFollowSpeed() * 0.25;
+			vecX *= mul;
+			vecY *= mul;
+			vecZ *= mul;
+
+			setPosition(locX += vecX, locY += vecY, locZ += vecZ);
 		}
 
 		@Override

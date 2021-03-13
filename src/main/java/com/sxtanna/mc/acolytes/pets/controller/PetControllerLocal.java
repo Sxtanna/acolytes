@@ -117,18 +117,9 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load(@NotNull final Player player, @NotNull final Pet pet)
 	{
-		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(),
-		                                                                new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK_AND_PITCH),
+		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(), getPetConfig());
+		pet.setEntity(entity);
 
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_SPEED),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_SHIFT),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_LIMIT),
-
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
-		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX)));
 		entity.setTargetEntity(player);
 
 		((ArmorStand) entity.getBukkitEntity()).setHelmet(new ItemStack(Material.DIAMOND_HELMET));
@@ -179,6 +170,22 @@ public final class PetControllerLocal implements PetController, Listener
 				      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to insert pets into repository for %s", player.getUniqueId()), fail);
 			      }
 		      });
+	}
+
+
+	private @NotNull PetConfig getPetConfig()
+	{
+		return new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK_AND_PITCH),
+
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_SPEED),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_SHIFT),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_LIMIT),
+
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX));
 	}
 
 

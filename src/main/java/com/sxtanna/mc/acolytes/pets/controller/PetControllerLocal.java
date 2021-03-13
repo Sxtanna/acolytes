@@ -55,6 +55,20 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load()
 	{
+		plugin.getModule().getRepository().select().whenComplete((pass, fail) -> {
+			if (fail != null)
+			{
+				this.plugin.getLogger().log(Level.SEVERE, "failed to select default pets from repository", fail);
+			}
+			else if (pass != null)
+			{
+				this.loaded.putAll(pass.stream()
+				                       .collect(toMap(pet -> pet.select(PetAttributes.UUID),
+				                                      Function.identity())));
+			}
+		});
+
+
 		Bukkit.getOnlinePlayers().forEach(this::load);
 
 		Bukkit.getServer().getPluginManager().registerEvents(this, this.plugin);

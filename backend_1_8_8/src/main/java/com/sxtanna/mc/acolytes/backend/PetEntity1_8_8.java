@@ -3,24 +3,24 @@ package com.sxtanna.mc.acolytes.backend;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.util.Vector;
 
+import com.google.common.util.concurrent.AtomicDouble;
+import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntityHuman;
-import net.minecraft.server.v1_8_R3.EntityZombie;
-import net.minecraft.server.v1_8_R3.Navigation;
-import net.minecraft.server.v1_8_R3.PathfinderGoal;
-import net.minecraft.server.v1_8_R3.PathfinderGoalFloat;
-import net.minecraft.server.v1_8_R3.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.EntityArmorStand;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public final class PetEntity1_8_8 extends EntityZombie implements PetEntity
+public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 {
 
 	@Nullable
@@ -28,23 +28,25 @@ public final class PetEntity1_8_8 extends EntityZombie implements PetEntity
 	@NotNull
 	private PetConfig config;
 
+	@NotNull
+	private final List<PetEntityGoal> goals = new ArrayList<>();
 
-	public PetEntity1_8_8(final World world, @NotNull final PetConfig config)
+
+	PetEntity1_8_8(@NotNull final World world, @NotNull final PetConfig config)
 	{
 		super(((CraftWorld) world).getHandle());
 
 		this.config = config;
 
-		clearGoals();
+		this.goals.add(new PetEntityGoalPetOwner());
 
-		((Navigation) this.getNavigation()).b(true);
-
-		this.goalSelector.a(0, new PathfinderGoalFloat(this));
-		this.goalSelector.a(5, new PathfinderGoalFollowPetEntityOwner());
-
+		if (config.isBobbing())
+		{
+			this.goals.add(new PetEntityGoalFloating());
+		}
 		if (config.isHeadLook())
 		{
-			this.goalSelector.a(8, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 8.0F));
+			this.goals.add(new PetEntityGoalHeadLook());
 		}
 	}
 
@@ -55,88 +57,192 @@ public final class PetEntity1_8_8 extends EntityZombie implements PetEntity
 		this.target = ((CraftEntity) entity).getHandle();
 	}
 
+
 	@Override
 	public boolean damageEntity(final DamageSource damagesource, final float f)
 	{
 		return false;
 	}
 
-
-	@SuppressWarnings("rawtypes")
-	private void clearGoals()
+	@Override
+	protected void a(final double d0, final boolean flag, final Block block, final BlockPosition blockposition)
 	{
-		try
+
+	}
+
+
+	@Override
+	public void K()
+	{
+		super.K();
+
+		for (final PetEntityGoal goal : this.goals)
 		{
-			final Field b = PathfinderGoalSelector.class.getDeclaredField("b");
-			b.setAccessible(true);
+			if (goal.hasBeganGoal())
+			{
+				if (goal.shouldUpdate())
+				{
+					goal.update();
+				}
+				else
+				{
+					goal.cancel();
+				}
 
-			final Field c = PathfinderGoalSelector.class.getDeclaredField("c");
-			c.setAccessible(true);
+				continue;
+			}
 
 
-			((List) b.get(this.goalSelector)).clear();
-			((List) c.get(this.goalSelector)).clear();
+			if (!goal.attemptStart())
+			{
+				continue;
+			}
 
-			((List) b.get(this.targetSelector)).clear();
-			((List) c.get(this.targetSelector)).clear();
-		}
-		catch (final NoSuchFieldException | IllegalAccessException ex)
-		{
-			ex.printStackTrace();
+			goal.update();
 		}
 	}
 
 
-	private final class PathfinderGoalFollowPetEntityOwner extends PathfinderGoal
+	private final class PetEntityGoalHeadLook implements PetEntityGoal
 	{
 
-		// shouldExecute
+		@NotNull
+		private final AtomicBoolean started = new AtomicBoolean();
+
+
 		@Override
-		public boolean a()
+		public boolean attemptStart()
 		{
-			return PetEntity1_8_8.this.target != null && PetEntity1_8_8.this.h(PetEntity1_8_8.this.target) >= (config.getFollowRangeMin() * config.getFollowRangeMin());
+			return target != null && !started.getAndSet(true);
 		}
 
-		// continueExecuting
 		@Override
-		public boolean b()
+		public boolean shouldUpdate()
 		{
-			return !getNavigation().m() && PetEntity1_8_8.this.h(PetEntity1_8_8.this.target) > (config.getFollowRangeMax() * config.getFollowRangeMax());
+			return target != null;
+		}
+
+		@Override
+		public boolean hasBeganGoal()
+		{
+			return started.get();
 		}
 
 
-		// isInterruptible
 		@Override
-		public boolean i()
+		public void update()
 		{
-			return super.i();
+			final Location location = getBukkitEntity().getLocation();
+			location.setDirection(target.getBukkitEntity().getLocation().toVector().subtract(location.toVector()));
+
+			setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		}
+
+		@Override
+		public void cancel()
+		{
+			started.set(false);
+		}
+
+	}
+
+	private final class PetEntityGoalFloating implements PetEntityGoal
+	{
+
+		@NotNull
+		private final AtomicBoolean started = new AtomicBoolean();
+
+
+		final AtomicDouble  shifted = new AtomicDouble();
+		final AtomicBoolean upwards = new AtomicBoolean();
+
+
+		@Override
+		public boolean attemptStart()
+		{
+			return !started.getAndSet(true);
+		}
+
+		@Override
+		public boolean shouldUpdate()
+		{
+			return true;
+		}
+
+		@Override
+		public boolean hasBeganGoal()
+		{
+			return true;
 		}
 
 
-		// startExecuting
 		@Override
-		public void c()
+		public void update()
 		{
+			shifted.addAndGet(upwards.get() ? +config.getBobbingRangeShift() : -config.getBobbingRangeShift());
 
-		}
-
-		// resetTask
-		@Override
-		public void d()
-		{
-			getNavigation().n();
-		}
-
-		// updateTask
-		@Override
-		public void e()
-		{
-			if (getNavigation().a(target, config.getFollowSpeed()))
+			if (shifted.get() >= +config.getBobbingRangeLimit())
 			{
-				return;
+				upwards.set(false);
 			}
 
-			// check if distance is too high, then teleport
+			if (shifted.get() <= -config.getBobbingRangeLimit())
+			{
+				upwards.set(true);
+			}
+
+			PetEntity1_8_8.this.motY = upwards.get() ? +config.getBobbingSpeed() : -config.getBobbingSpeed();
+		}
+
+		@Override
+		public void cancel()
+		{
+			started.set(false);
+		}
+
+	}
+
+	private final class PetEntityGoalPetOwner implements PetEntityGoal
+	{
+
+		@NotNull
+		private final AtomicBoolean started = new AtomicBoolean();
+
+
+		@Override
+		public boolean attemptStart()
+		{
+			return target != null && h(target) >= (config.getFollowRangeMin() * config.getFollowRangeMin()) && !started.getAndSet(true);
+		}
+
+		@Override
+		public boolean shouldUpdate()
+		{
+			return target != null && (Math.abs(target.locY - locY) > 1) || h(target) >= (config.getFollowRangeMax() * config.getFollowRangeMax());
+		}
+
+		@Override
+		public boolean hasBeganGoal()
+		{
+			return started.get();
+		}
+
+
+		@Override
+		public void update()
+		{
+			final Vector vector = target.getBukkitEntity().getLocation().toVector().subtract(getBukkitEntity().getLocation().toVector()).normalize();
+			vector.multiply(config.getFollowSpeed() * 0.25);
+
+			move(vector.getX(), vector.getY(), vector.getZ());
+		}
+
+		@Override
+		public void cancel()
+		{
+			started.set(false);
+
+			move(0.0, 0.0, 0.0);
 		}
 
 	}

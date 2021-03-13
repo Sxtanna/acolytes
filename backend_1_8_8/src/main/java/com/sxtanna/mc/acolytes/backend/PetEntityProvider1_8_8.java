@@ -14,6 +14,7 @@ import java.util.Map;
 public final class PetEntityProvider1_8_8 implements PetEntityProvider
 {
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public void initialize()
 	{
@@ -28,10 +29,9 @@ public final class PetEntityProvider1_8_8 implements PetEntityProvider
 			final Field f = EntityTypes.class.getDeclaredField("f");
 			f.setAccessible(true);
 
-			((Map) c.get(null)).put("Zombie", PetEntity1_8_8.class);
-			((Map) d.get(null)).put(PetEntity1_8_8.class, "Zombie");
-
-			((Map) f.get(null)).put(PetEntity1_8_8.class, 54);
+			((Map) c.get(null)).put("ArmorStand", PetEntity1_8_8.class);
+			((Map) d.get(null)).put(PetEntity1_8_8.class, "ArmorStand");
+			((Map) f.get(null)).put(PetEntity1_8_8.class, 30);
 		}
 		catch (final NoSuchFieldException | IllegalAccessException ex)
 		{
@@ -43,10 +43,13 @@ public final class PetEntityProvider1_8_8 implements PetEntityProvider
 	public @NotNull PetEntity spawn(@NotNull final Location location, @NotNull final PetConfig config)
 	{
 		final PetEntity1_8_8 entity = new PetEntity1_8_8(location.getWorld(), config);
-
 		entity.setPositionRotation(location.getX(), location.getY(), location.getZ(),location.getYaw(), location.getPitch());
 
 		((CraftWorld) location.getWorld()).getHandle().addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
+
+		entity.setSmall(true);
+		entity.setInvisible(true);
+		entity.setBasePlate(false);
 
 		return entity;
 	}

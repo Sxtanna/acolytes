@@ -81,32 +81,29 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 	@Override
 	public void K()
 	{
-		super.K();
-
 		for (final PetEntityGoal goal : this.goals)
 		{
-			if (goal.hasBeganGoal())
+			if (!goal.hasBeganGoal())
 			{
-				if (goal.shouldUpdate())
+				if (goal.attemptStart())
 				{
 					goal.update();
 				}
-				else
-				{
-					goal.cancel();
-				}
 
 				continue;
 			}
 
-
-			if (!goal.attemptStart())
+			if (goal.shouldUpdate())
 			{
-				continue;
+				goal.update();
 			}
-
-			goal.update();
+			else
+			{
+				goal.cancel();
+			}
 		}
+
+		super.K();
 	}
 
 

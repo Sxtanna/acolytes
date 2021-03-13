@@ -143,7 +143,22 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void kill(@NotNull final Player player, @NotNull final Pet pet)
 	{
+		final Pet active = this.active.get(player.getUniqueId());
+		if (!active.equals(pet))
+		{
+			return; // not active pet
+		}
 
+		this.active.remove(player.getUniqueId());
+
+
+		final PetEntity entity = pet.setEntity(null);
+		if (entity == null)
+		{
+			return; // not spawned
+		}
+
+		entity.getBukkitEntity().remove();
 	}
 
 

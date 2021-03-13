@@ -15,7 +15,9 @@ import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.DamageSource;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.EntityTrackerEntry;
 import net.minecraft.server.v1_8_R3.Vector3f;
+import net.minecraft.server.v1_8_R3.WorldServer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +149,12 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 			vecY -= locY;
 			vecZ -= locZ;
 
-			lastYaw = yaw = ((float) Math.toDegrees((Math.atan2(-vecX, vecZ) + _2PI) % _2PI)) % 360.0f;
+			final EntityTrackerEntry entry = ((WorldServer) world).tracker.trackedEntities.get(getId());
+			entry.m = entry.c;
+			entry.xRot = -4;
+			entry.i = -4;
+
+			setPositionRotation(locX, locY, locZ, ((float) Math.toDegrees(Math.atan2(-vecX, vecZ))), 0.0f);
 
 			if (config.isHeadLookAndPitch())
 			{
@@ -209,7 +216,7 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 				upwards.set(true);
 			}
 
-			PetEntity1_8_8.this.motY = upwards.get() ? +config.getBobbingSpeed() : -config.getBobbingSpeed();
+			setPosition(locX, locY += upwards.get() ? +config.getBobbingSpeed() : -config.getBobbingSpeed(), locZ);
 		}
 
 		@Override

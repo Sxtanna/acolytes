@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
+import com.sxtanna.mc.acolytes.backend.PetEntityProvider;
+import com.sxtanna.mc.acolytes.backend.PetEntityProvider1_8_8;
 import com.sxtanna.mc.acolytes.base.State;
 import com.sxtanna.mc.acolytes.pets.controller.PetController;
 import com.sxtanna.mc.acolytes.pets.controller.PetControllerLocal;
@@ -12,6 +14,7 @@ import com.sxtanna.mc.acolytes.pets.repository.PetRepository;
 import com.sxtanna.mc.acolytes.pets.repository.PetRepositoryLocal;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class AcolytesModule implements State
 {
@@ -25,6 +28,9 @@ public final class AcolytesModule implements State
 	@Nullable
 	private PetRepository repository;
 
+	@NotNull
+	private final AtomicReference<PetEntityProvider> provider = new AtomicReference<>();
+
 
 	public AcolytesModule(@NotNull final AcolytesPlugin plugin)
 	{
@@ -35,6 +41,18 @@ public final class AcolytesModule implements State
 	@Override
 	public void load()
 	{
+		switch (plugin.getServer().getClass().getPackage().getName().split("\\.")[3])
+		{
+			case "v1_8_R3":
+				this.provider.set(new PetEntityProvider1_8_8());
+				break;
+			default:
+				throw new IllegalStateException("could not find pet entity provider for server version");
+		}
+
+
+		getProvider().initialize();
+
 		this.controller = new PetControllerLocal(this.plugin);
 		this.repository = new PetRepositoryLocal(this.plugin);
 
@@ -63,6 +81,12 @@ public final class AcolytesModule implements State
 	public @NotNull PetRepository getRepository()
 	{
 		return Objects.requireNonNull(this.repository, "acolytes module not enabled");
+	}
+
+
+	public @NotNull PetEntityProvider getProvider()
+	{
+		return Objects.requireNonNull(this.provider.get(), "provider not resolved yet!");
 	}
 
 }

@@ -114,7 +114,25 @@ public final class AcolytesPlugin extends JavaPlugin
 				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find pet named %s!", uuid), false));
 			}
 
-			return null;
+			if (context.hasFlag("by_uuid"))
+			{
+				final String uuid = context.popFirstArg();
+
+				return getModule().getController()
+				                  .getByUuid(uuid)
+				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find pet named %s!", uuid), false));
+			}
+
+			throw new InvalidCommandArgument("could not find pet!", false);
+		});
+
+
+		manager.getCommandCompletions().registerCompletion("pets", context -> {
+			return getModule().getController().getLoadedPets().keySet();
+		});
+
+		manager.getCommandCompletions().registerCompletion("target_pets", context -> {
+			return getModule().getController().getPlayerPets(context.getContextValue(OnlinePlayer.class).getPlayer()).keySet();
 		});
 
 

@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetEntityProvider;
 import com.sxtanna.mc.acolytes.backend.PetEntityProvider1_8_8;
+import com.sxtanna.mc.acolytes.backend.PlayerSkinAdapter;
+import com.sxtanna.mc.acolytes.backend.PlayerSkinAdapter1_8_8;
 import com.sxtanna.mc.acolytes.base.State;
 import com.sxtanna.mc.acolytes.pets.controller.PetController;
 import com.sxtanna.mc.acolytes.pets.controller.PetControllerLocal;
@@ -29,6 +31,8 @@ public final class AcolytesModule implements State
 	private PetRepository repository;
 
 	@NotNull
+	private final AtomicReference<PlayerSkinAdapter> adapter = new AtomicReference<>();
+	@NotNull
 	private final AtomicReference<PetEntityProvider> provider = new AtomicReference<>();
 
 
@@ -44,6 +48,7 @@ public final class AcolytesModule implements State
 		switch (plugin.getServer().getClass().getPackage().getName().split("\\.")[3])
 		{
 			case "v1_8_R3":
+				this.adapter.set(new PlayerSkinAdapter1_8_8());
 				this.provider.set(new PetEntityProvider1_8_8());
 				break;
 			default:
@@ -83,6 +88,11 @@ public final class AcolytesModule implements State
 		return Objects.requireNonNull(this.repository, "acolytes module not enabled");
 	}
 
+
+	public @NotNull PlayerSkinAdapter getAdapter()
+	{
+		return Objects.requireNonNull(this.adapter.get(), "adapter not resolved yet!");
+	}
 
 	public @NotNull PetEntityProvider getProvider()
 	{

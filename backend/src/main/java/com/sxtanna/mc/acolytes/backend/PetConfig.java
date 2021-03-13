@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Contract;
 public final class PetConfig
 {
 
+	private final boolean smallHead;
+
 	private final boolean headLook;
 	private final boolean headLookAndPitch;
 
@@ -23,9 +25,10 @@ public final class PetConfig
 
 
 	@Contract(pure = true)
-	public PetConfig(final boolean headLook, final boolean headLookAndPitch, final boolean bobbing, final double bobbingSpeed, final double bobbingRangeShift, final double bobbingRangeLimit, final double followSpeed, final double followRangeMin, final double followRangeMax)
+	public PetConfig(final boolean smallHead, final boolean headLook, final boolean headLookAndPitch, final boolean bobbing, final double bobbingSpeed, final double bobbingRangeShift, final double bobbingRangeLimit, final double followSpeed, final double followRangeMin, final double followRangeMax)
 	{
-		this.headLook = headLook;
+		this.smallHead        = smallHead;
+		this.headLook         = headLook;
 		this.headLookAndPitch = headLookAndPitch;
 
 		this.bobbing           = bobbing;
@@ -38,6 +41,12 @@ public final class PetConfig
 		this.followRangeMax = followRangeMax;
 	}
 
+
+	@Contract(pure = true)
+	public boolean isSmallHead()
+	{
+		return smallHead;
+	}
 
 	@Contract(pure = true)
 	public boolean isHeadLook()

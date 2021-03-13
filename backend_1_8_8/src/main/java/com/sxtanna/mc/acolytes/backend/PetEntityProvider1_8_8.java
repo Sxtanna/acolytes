@@ -47,7 +47,7 @@ public final class PetEntityProvider1_8_8 implements PetEntityProvider
 
 		((CraftWorld) location.getWorld()).getHandle().addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
-		entity.setSmall(true);
+		entity.setSmall(config.isSmallHead());
 		entity.setInvisible(true);
 		entity.setBasePlate(false);
 

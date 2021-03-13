@@ -56,6 +56,12 @@ public final class AcolytesConfig extends SettingsManagerImpl
 				newProperty("plugin.pet.custom-name.max", 16);
 
 
+		public static final Property<Boolean> PET_DETAILS_SMALL_HEAD =
+				newProperty("plugin.pet.details.head.small", false);
+
+		public static final Property<Boolean> PET_DETAILS_NAME_VISIBLE =
+				newProperty("plugin.pet.details.name.visible", true);
+
 		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK =
 				newProperty("plugin.pet.details.head-look.enabled", true);
 		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK_AND_PITCH =

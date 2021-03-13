@@ -129,7 +129,7 @@ public final class PetControllerLocal implements PetController, Listener
 		if (name != null)
 		{
 			bukkit.setCustomName(Colors.colorize(name));
-			bukkit.setCustomNameVisible(true);
+			bukkit.setCustomNameVisible(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_NAME_VISIBLE));
 		}
 
 		if (bukkit instanceof LivingEntity)
@@ -203,7 +203,8 @@ public final class PetControllerLocal implements PetController, Listener
 
 	private @NotNull PetConfig getPetConfig()
 	{
-		return new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
+		return new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_SMALL_HEAD),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
 		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK_AND_PITCH),
 
 		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING),

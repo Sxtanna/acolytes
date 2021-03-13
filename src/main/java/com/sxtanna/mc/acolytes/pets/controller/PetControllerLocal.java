@@ -3,15 +3,14 @@ package com.sxtanna.mc.acolytes.pets.controller;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetConfig;
@@ -19,6 +18,7 @@ import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
+import com.sxtanna.mc.acolytes.util.Colors;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -122,9 +122,22 @@ public final class PetControllerLocal implements PetController, Listener
 
 		entity.setTargetEntity(player);
 
-		((ArmorStand) entity.getBukkitEntity()).setHelmet(new ItemStack(Material.DIAMOND_HELMET));
 
-		// pet.setEntity(entity);
+		final Entity bukkit = entity.getBukkitEntity();
+
+		final String name = pet.select(PetAttributes.NAME);
+		if (name != null)
+		{
+			bukkit.setCustomName(Colors.colorize(name));
+			bukkit.setCustomNameVisible(true);
+		}
+
+		if (bukkit instanceof LivingEntity)
+		{
+			((LivingEntity) bukkit).getEquipment().setHelmet(pet.createHeadItem(plugin.getModule().getAdapter()));
+		}
+
+		this.active.put(player.getUniqueId(), pet);
 	}
 
 	@Override

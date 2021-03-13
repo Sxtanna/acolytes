@@ -4,21 +4,18 @@ import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetConfig;
 import com.sxtanna.mc.acolytes.backend.PetEntity;
-import com.sxtanna.mc.acolytes.backend.PetEntityProvider1_8_8;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
@@ -85,21 +82,20 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load(@NotNull final Player player, @NotNull final Pet pet)
 	{
-		final PetEntityProvider1_8_8 provider = new PetEntityProvider1_8_8();
-		provider.initialize();
+		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(),
+		                                                                new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
 
-		final PetEntity entity = provider.spawn(player.getLocation(),
-		                                        new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
-		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
-		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
-		                                                      plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX)));
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_SPEED),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_SHIFT),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_BOBBING_RANGE_LIMIT),
+
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
+		                                                                              plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX)));
 		entity.setTargetEntity(player);
 
-
-		final Zombie zombie = (Zombie) entity.getBukkitEntity();
-		zombie.setBaby(true);
-		zombie.getEquipment().setHelmet(new ItemStack(Material.SKULL_ITEM, 1, (short) 3));
-		zombie.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1, false, false));
+		((ArmorStand) entity.getBukkitEntity()).setHelmet(new ItemStack(Material.DIAMOND_HELMET));
 
 		// pet.setEntity(entity);
 	}

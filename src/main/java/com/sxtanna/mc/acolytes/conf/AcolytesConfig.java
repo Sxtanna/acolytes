@@ -57,7 +57,20 @@ public final class AcolytesConfig extends SettingsManagerImpl
 
 
 		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK =
-				newProperty("plugin.pet.details.head-look", false);
+				newProperty("plugin.pet.details.head-look.enabled", true);
+
+
+		public static final Property<Boolean> PET_DETAILS_BOBBING =
+				newProperty("plugin.pet.details.bobbing.enabled", true);
+
+		public static final Property<Double> PET_DETAILS_BOBBING_RANGE_SHIFT =
+				newProperty("plugin.pet.details.bobbing.range.shift", 0.1);
+
+		public static final Property<Double> PET_DETAILS_BOBBING_RANGE_LIMIT =
+				newProperty("plugin.pet.details.bobbing.range.limit", 0.5);
+
+		public static final Property<Double> PET_DETAILS_BOBBING_SPEED =
+				newProperty("plugin.pet.details.bobbing.speed", 0.05);
 
 		public static final Property<Double> PET_PATHING_SPEED =
 				newProperty("plugin.pet.pathing.speed", 1.25);

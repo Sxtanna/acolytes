@@ -94,7 +94,7 @@ public final class AcolytesPlugin extends JavaPlugin
 		manager.getCommandContexts().registerContext(OnlinePlayer.class,
 		                                             OnlinePlayerResolver.INSTANCE);
 
-		manager.getCommandContexts().registerContext(Pet.class, context ->
+		manager.getCommandContexts().registerIssuerAwareContext(Pet.class, context ->
 		{
 			final Player player = ((OnlinePlayer) context.getResolvedArg(OnlinePlayer.class)).getPlayer();
 
@@ -108,15 +108,23 @@ public final class AcolytesPlugin extends JavaPlugin
 			if (context.hasFlag("target"))
 			{
 				final String uuid = context.popFirstArg();
+				if (uuid == null)
+				{
+					throw new InvalidCommandArgument("You must supply the uuid of the player's pet", false);
+				}
 
 				return getModule().getController()
 				                  .getByUuid(player, uuid)
-				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find pet named %s!", uuid), false));
+				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find player's pet named %s!", uuid), false));
 			}
 
 			if (context.hasFlag("by_uuid"))
 			{
 				final String uuid = context.popFirstArg();
+				if (uuid == null)
+				{
+					throw new InvalidCommandArgument("You must supply the uuid of a pet", false);
+				}
 
 				return getModule().getController()
 				                  .getByUuid(uuid)

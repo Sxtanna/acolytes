@@ -234,7 +234,9 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 			final Vector vector = target.getBukkitEntity().getLocation().toVector().subtract(getBukkitEntity().getLocation().toVector()).normalize();
 			vector.multiply(config.getFollowSpeed() * 0.25);
 
-			move(vector.getX(), vector.getY(), vector.getZ());
+			locX += vector.getX();
+			locY += vector.getY();
+			locZ += vector.getZ();
 		}
 
 		@Override

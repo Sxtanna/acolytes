@@ -10,7 +10,7 @@ public interface Pet
 
 	@Nullable PetEntity getEntity();
 
-	void setEntity(@Nullable PetEntity entity);
+	@Nullable PetEntity setEntity(@Nullable PetEntity entity);
 
 
 	@Nullable <T> T select(@NotNull final PetAttribute<T> attribute);

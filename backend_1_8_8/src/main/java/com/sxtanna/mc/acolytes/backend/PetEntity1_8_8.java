@@ -39,15 +39,16 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 
 		this.config = config;
 
+		if (config.isHeadLook())
+		{
+			this.goals.add(new PetEntityGoalHeadLook());
+		}
+
 		this.goals.add(new PetEntityGoalPetOwner());
 
 		if (config.isBobbing())
 		{
 			this.goals.add(new PetEntityGoalFloating());
-		}
-		if (config.isHeadLook())
-		{
-			this.goals.add(new PetEntityGoalHeadLook());
 		}
 	}
 

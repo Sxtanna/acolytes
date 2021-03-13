@@ -149,6 +149,11 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 			vecY -= locY;
 			vecZ -= locZ;
 
+			if (Math.abs(vecX) < 1.0 && Math.abs(vecY) < 1.0 && Math.abs(vecZ) < 1.0)
+			{
+				return; // too close
+			}
+
 			final EntityTrackerEntry entry = ((WorldServer) world).tracker.trackedEntities.get(getId());
 			entry.m = entry.c;
 			entry.xRot = -4;

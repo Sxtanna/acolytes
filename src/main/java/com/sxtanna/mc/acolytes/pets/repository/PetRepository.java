@@ -19,6 +19,9 @@ public interface PetRepository extends State
 	void kill();
 
 
+	@NotNull CompletableFuture<Collection<Pet>> select();
+
+
 	@NotNull CompletableFuture<Collection<Pet>> select(@NotNull final UUID uuid);
 
 	@NotNull CompletableFuture<Void> delete(@NotNull final UUID uuid);

@@ -44,7 +44,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 
 
 	@Subcommand("enable")
-	@CommandCompletion("@players @pets")
+	@CommandCompletion("@players @target_pets")
 	@CommandPermission("pets.admin.enable")
 	public void enable(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("target") final Pet pet)
 	{
@@ -75,7 +75,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@Subcommand("give")
 	@CommandCompletion("@players @pets")
 	@CommandPermission("pets.admin.give")
-	public void give(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("target") final Pet pet)
+	public void give(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("by_uuid") final Pet pet)
 	{
 		// todo: give them access to the target pet
 	}

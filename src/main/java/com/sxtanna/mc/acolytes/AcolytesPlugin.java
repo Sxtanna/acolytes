@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sxtanna.mc.acolytes.cmds.CommandAcolytes;
@@ -11,11 +12,15 @@ import com.sxtanna.mc.acolytes.cmds.CommandAcolytesAdmin;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.pets.AcolytesModule;
+import com.sxtanna.mc.acolytes.util.Colors;
 import com.sxtanna.mc.acolytes.util.OnlinePlayerResolver;
 import com.sxtanna.mc.acolytes.util.PetResolver;
 
+import co.aikar.commands.ACFUtil;
+import co.aikar.commands.BukkitCommandIssuer;
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import co.aikar.locales.MessageKeyProvider;
 
 import java.util.Objects;
 
@@ -40,6 +45,9 @@ public final class AcolytesPlugin extends JavaPlugin
 	private final AcolytesConfig config = new AcolytesConfig(this);
 	@NotNull
 	private final AcolytesModule module = new AcolytesModule(this);
+
+	@Nullable
+	private PaperCommandManager manager;
 
 
 	@Override
@@ -82,9 +90,28 @@ public final class AcolytesPlugin extends JavaPlugin
 	}
 
 
+	public void send(@NotNull final CommandSender sender, @NotNull final MessageKeyProvider provider, @NotNull final String... replacements)
+	{
+		if (manager == null)
+		{
+			return;
+		}
+
+		final BukkitCommandIssuer issuer = manager.getCommandIssuer(sender);
+
+		String message = manager.getLocales().getMessage(issuer, provider.getMessageKey());
+		if (replacements.length != 0)
+		{
+			message = ACFUtil.replaceStrings(message, replacements);
+		}
+
+		issuer.sendMessage(Colors.colorize(message));
+	}
+
+
 	private void initializeCommandManager()
 	{
-		final PaperCommandManager manager = new PaperCommandManager(this);
+		manager = new PaperCommandManager(this);
 		manager.enableUnstableAPI("help");
 		manager.enableUnstableAPI("brigadier");
 		manager.usePerIssuerLocale(true, true);

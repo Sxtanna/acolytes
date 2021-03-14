@@ -3,10 +3,18 @@ package com.sxtanna.mc.acolytes.menu.impl;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
+import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.menu.Menu;
+import com.sxtanna.mc.acolytes.util.Colors;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sxtanna.mc.acolytes.menu.Menu.Size.forCount;
 import static com.sxtanna.mc.acolytes.util.Colors.colorize;
@@ -33,6 +41,37 @@ public final class MenuPets extends Menu
 	@Override
 	protected void make()
 	{
+		final Map<String, Pet> pets = plugin.getModule().getController().getLoadedPets();
+
+		final AtomicInteger next = new AtomicInteger();
+
+		for (final Map.Entry<String, Pet> entry : pets.entrySet())
+		{
+			final int slot = next.getAndIncrement();
+			if (slot > getInventory().getSize())
+			{
+				break; // paginate?
+			}
+
+			final ItemStack item = entry.getValue().createHeadItem(plugin.getModule().getAdapter());
+			final ItemMeta  meta = item.getItemMeta();
+
+			final String name = entry.getValue().select(PetAttributes.NAME);
+			if (name != null)
+			{
+				meta.setDisplayName(Colors.colorize(name));
+			}
+
+			item.setItemMeta(meta);
+
+			slot(slot, item, event ->
+			{
+				// todo: check if they own this pet first
+
+				player.closeInventory();
+				plugin.getModule().getController().load(player, entry.getValue());
+			});
+		}
 
 	}
 

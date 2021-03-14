@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.logging.Level;
 
+import static java.util.concurrent.ThreadLocalRandom.current;
 import static java.util.stream.Collectors.toMap;
 
 public final class PetControllerLocal implements PetController, Listener
@@ -117,7 +118,9 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load(@NotNull final Player player, @NotNull final Pet pet)
 	{
-		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(), getPetConfig());
+		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation().add(current().nextDouble(-5.0, +5.0),
+		                                                                                         current().nextDouble(-1.0, +1.0),
+		                                                                                         current().nextDouble(-5.0, +5.0)), getPetConfig());
 		entity.setTargetEntity(player);
 
 		pet.setEntity(entity);

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sxtanna.mc.acolytes.cmds.CommandAcolytes;
@@ -13,8 +12,8 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.pets.AcolytesModule;
 import com.sxtanna.mc.acolytes.util.OnlinePlayerResolver;
+import com.sxtanna.mc.acolytes.util.PetResolver;
 
-import co.aikar.commands.InvalidCommandArgument;
 import co.aikar.commands.PaperCommandManager;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 
@@ -94,55 +93,18 @@ public final class AcolytesPlugin extends JavaPlugin
 		manager.getCommandContexts().registerContext(OnlinePlayer.class,
 		                                             OnlinePlayerResolver.INSTANCE);
 
-		manager.getCommandContexts().registerIssuerAwareContext(Pet.class, context ->
-		{
-			final Player player = ((OnlinePlayer) context.getResolvedArg(OnlinePlayer.class)).getPlayer();
+		manager.getCommandContexts().registerIssuerAwareContext(Pet.class,
+		                                                        PetResolver.INSTANCE);
 
-			if (context.hasFlag("active"))
-			{
-				return getModule().getController()
-				                  .getActive(player)
-				                  .orElseThrow(() -> new InvalidCommandArgument("no active pet found!", false));
-			}
+		manager.getCommandCompletions().registerCompletion("pets",
+		                                                   context -> getModule().getController()
+		                                                                         .getLoadedPets()
+		                                                                         .keySet());
 
-			if (context.hasFlag("target"))
-			{
-				final String uuid = context.popFirstArg();
-				if (uuid == null)
-				{
-					throw new InvalidCommandArgument("You must supply the uuid of the player's pet", false);
-				}
-
-				return getModule().getController()
-				                  .getByUuid(player, uuid)
-				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find player's pet named %s!", uuid), false));
-			}
-
-			if (context.hasFlag("by_uuid"))
-			{
-				final String uuid = context.popFirstArg();
-				if (uuid == null)
-				{
-					throw new InvalidCommandArgument("You must supply the uuid of a pet", false);
-				}
-
-				return getModule().getController()
-				                  .getByUuid(uuid)
-				                  .orElseThrow(() -> new InvalidCommandArgument(String.format("could not find pet named %s!", uuid), false));
-			}
-
-			throw new InvalidCommandArgument("could not find pet!", false);
-		});
-
-
-		manager.getCommandCompletions().registerCompletion("pets", context -> {
-			return getModule().getController().getLoadedPets().keySet();
-		});
-
-		manager.getCommandCompletions().registerCompletion("target_pets", context -> {
-			return getModule().getController().getPlayerPets(context.getContextValue(OnlinePlayer.class).getPlayer()).keySet();
-		});
-
+		manager.getCommandCompletions().registerCompletion("target_pets",
+		                                                   context -> getModule().getController()
+		                                                                         .getPlayerPets(context.getContextValue(OnlinePlayer.class).getPlayer())
+		                                                                         .keySet());
 
 		manager.registerCommand(new CommandAcolytes(this));
 		manager.registerCommand(new CommandAcolytesAdmin(this));

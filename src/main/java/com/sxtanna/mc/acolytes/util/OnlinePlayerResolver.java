@@ -35,7 +35,6 @@ public enum OnlinePlayerResolver implements ContextResolver<OnlinePlayer, Bukkit
 	@Override
 	public OnlinePlayer getContext(@NotNull final BukkitCommandExecutionContext context) throws InvalidCommandArgument
 	{
-		System.out.println("resolving player");
 		if (context.hasFlag("sender"))
 		{
 			final CommandSender sender = context.getSender();

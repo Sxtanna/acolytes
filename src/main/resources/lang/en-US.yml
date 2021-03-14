@@ -5,3 +5,7 @@ cmds:
     name-update:
       sender: "&7Pet name has been updated from&r {old_name}&r &7to&r {new_name}&r"
       target: "&7Your pet's name has been updated from&r {old_name}&r &7to&r {new_name}&r"
+
+menu:
+  spawned: "&7You have summoned&r {pet_name}&r"
+  removed: "{pet_name}&r &7was sent away!"

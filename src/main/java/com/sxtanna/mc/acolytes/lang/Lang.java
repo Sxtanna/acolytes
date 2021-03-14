@@ -12,7 +12,12 @@ public enum Lang implements MessageKeyProvider
 
 	CMDS__USERS__NAME_UPDATE,
 	CMDS__ADMIN__NAME_UPDATE__SENDER,
-	CMDS__ADMIN__NAME_UPDATE__TARGET;
+	CMDS__ADMIN__NAME_UPDATE__TARGET,
+
+	MENU__SPAWNED,
+	MENU__REMOVED,
+
+	;
 
 
 	@NotNull

@@ -1,0 +1,7 @@
+cmds:
+  users:
+    name-update: "&7Pet name has been updated from {old_name} &7to&r {new_name}&r"
+  admin:
+    name-update:
+      sender: "&7Pet name has been updated from {old_name} &7to&r {new_name}&r"
+      target: "&7Your pet's name has been updated from {old_name} &7to&r {new_name}&r"

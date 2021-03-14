@@ -74,6 +74,9 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void kill()
 	{
+		this.active.values().forEach(pet -> Optional.ofNullable(pet.setEntity(null)).map(PetEntity::getBukkitEntity).ifPresent(Entity::remove));
+		this.active.clear();
+
 		Bukkit.getOnlinePlayers().forEach(this::kill);
 
 		HandlerList.unregisterAll(this);

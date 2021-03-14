@@ -1,4 +1,4 @@
-package com.sxtanna.mc.acolytes.util;
+package com.sxtanna.mc.acolytes.util.bukkit;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;

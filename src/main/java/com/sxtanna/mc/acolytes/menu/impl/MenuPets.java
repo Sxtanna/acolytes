@@ -11,13 +11,13 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.menu.Menu;
-import com.sxtanna.mc.acolytes.util.Colors;
+import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.sxtanna.mc.acolytes.menu.Menu.Size.forCount;
-import static com.sxtanna.mc.acolytes.util.Colors.colorize;
+import static com.sxtanna.mc.acolytes.util.bukkit.Colors.colorize;
 
 public final class MenuPets extends Menu
 {

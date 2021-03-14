@@ -13,7 +13,7 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.PetAttribute;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
-import com.sxtanna.mc.acolytes.util.Colors;
+import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
 import java.util.HashMap;
 import java.util.Map;

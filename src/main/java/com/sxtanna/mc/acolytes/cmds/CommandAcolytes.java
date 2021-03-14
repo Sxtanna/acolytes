@@ -12,7 +12,7 @@ import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.menu.impl.MenuPets;
-import com.sxtanna.mc.acolytes.util.Colors;
+import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.InvalidCommandArgument;

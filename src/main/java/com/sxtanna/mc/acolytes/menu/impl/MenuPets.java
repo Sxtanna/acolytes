@@ -11,7 +11,7 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.menu.Menu;
-import com.sxtanna.mc.acolytes.util.bukkit.Colors;
+import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,14 +53,14 @@ public final class MenuPets extends Menu
 				break; // paginate?
 			}
 
-			final ItemStack item = entry.getValue().createHeadItem(plugin.getModule().getAdapter());
-			final ItemMeta  meta = item.getItemMeta();
 
-			entry.getValue().select(PetAttributes.NAME).ifPresent(name -> {
-				meta.setDisplayName(Colors.colorize(name));
+			final ItemStack item = Stacks.meta(entry.getValue().createHeadItem(plugin.getModule().getAdapter()), meta ->
+			{
+				entry.getValue().select(PetAttributes.NAME).ifPresent(name -> {
+					Stacks.name(meta, name);
+				});
 			});
 
-			item.setItemMeta(meta);
 
 			slot(slot, item, event ->
 			{

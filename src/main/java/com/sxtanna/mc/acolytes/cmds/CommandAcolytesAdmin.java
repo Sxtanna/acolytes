@@ -18,7 +18,6 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Flags;
-import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 
@@ -84,7 +83,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@Subcommand("name")
 	@CommandCompletion("@players")
 	@CommandPermission("pets.admin.name")
-	public void name(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("active") final Pet pet, @NotNull @Single final String name)
+	public void name(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("active") final Pet pet, @NotNull final String name)
 	{
 		final String newName = Colors.colorize(name);
 

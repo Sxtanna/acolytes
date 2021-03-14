@@ -19,7 +19,6 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Flags;
-import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 
 @CommandAlias("pet|pets")
@@ -53,7 +52,7 @@ public final class CommandAcolytes extends BaseCommand
 
 	@Subcommand("name")
 	@CommandPermission("pets.user.name")
-	public void name(@NotNull final Player player, @NotNull @Flags("active") final Pet pet, @NotNull @Single final String name)
+	public void name(@NotNull final Player player, @NotNull @Flags("active") final Pet pet, @NotNull final String name)
 	{
 		final String newName = Colors.colorize(name);
 

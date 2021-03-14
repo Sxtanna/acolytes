@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -18,7 +17,6 @@ import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
-import com.sxtanna.mc.acolytes.util.Colors;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -39,9 +37,9 @@ public final class PetControllerLocal implements PetController, Listener
 
 
 	@NotNull
-	private final Map<String, Pet>            loaded = new HashMap<>();
-	@NotNull
 	private final Map<UUID, Pet>              active = new HashMap<>();
+	@NotNull
+	private final Map<String, Pet>            loaded = new HashMap<>();
 	@NotNull
 	private final Map<UUID, Map<String, Pet>> cached = new HashMap<>();
 
@@ -67,7 +65,6 @@ public final class PetControllerLocal implements PetController, Listener
 				                                      Function.identity())));
 			}
 		});
-
 
 		Bukkit.getOnlinePlayers().forEach(this::load);
 

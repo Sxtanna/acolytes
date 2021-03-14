@@ -10,6 +10,7 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.conf.Resolved;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
+import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.menu.impl.MenuPets;
 import com.sxtanna.mc.acolytes.util.Colors;
 
@@ -67,7 +68,14 @@ public final class CommandAcolytes extends BaseCommand
 		final String oldName = pet.update(PetAttributes.NAME, newName);
 		pet.pushAttrs(plugin);
 
-		// todo: send message "pet name has been updated from `oldName` to `newName`"
+		plugin.send(player,
+		            Lang.CMDS__USERS__NAME_UPDATE,
+
+		            "{new_name}",
+		            newName,
+
+		            "{old_name}",
+		            oldName != null ? oldName : "");
 
 	}
 

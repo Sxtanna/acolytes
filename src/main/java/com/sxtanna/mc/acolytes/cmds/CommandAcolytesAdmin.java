@@ -10,6 +10,7 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.conf.Resolved;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
+import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.util.Colors;
 
 import co.aikar.commands.BaseCommand;
@@ -98,7 +99,29 @@ public final class CommandAcolytesAdmin extends BaseCommand
 		final String oldName = pet.update(PetAttributes.NAME, newName);
 		pet.pushAttrs(plugin);
 
-		// todo: send message "pet name has been updated from `oldName` to `newName`"
+		plugin.send(sender,
+		            Lang.CMDS__ADMIN__NAME_UPDATE__SENDER,
+
+		            "{new_name}",
+		            newName,
+
+		            "{old_name}",
+		            oldName != null ? oldName : "");
+
+		if (sender.equals(target.getPlayer()))
+		{
+			return;
+		}
+
+		plugin.send(target.getPlayer(),
+		            Lang.CMDS__ADMIN__NAME_UPDATE__TARGET,
+
+		            "{new_name}",
+		            newName,
+
+		            "{old_name}",
+		            oldName != null ? oldName : "");
+
 	}
 
 }

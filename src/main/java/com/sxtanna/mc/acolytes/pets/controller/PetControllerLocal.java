@@ -62,7 +62,7 @@ public final class PetControllerLocal implements PetController, Listener
 			else if (pass != null)
 			{
 				this.loaded.putAll(pass.stream()
-				                       .collect(toMap(pet -> pet.select(PetAttributes.UUID),
+				                       .collect(toMap(pet -> pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")),
 				                                      Function.identity())));
 			}
 		});
@@ -164,7 +164,7 @@ public final class PetControllerLocal implements PetController, Listener
 			      else if (pass != null)
 			      {
 				      this.cached.put(player.getUniqueId(), pass.stream()
-				                                                .collect(toMap(pet -> pet.select(PetAttributes.UUID),
+				                                                .collect(toMap(pet -> pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")),
 				                                                               Function.identity())));
 			      }
 		      });

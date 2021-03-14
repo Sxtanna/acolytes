@@ -14,6 +14,8 @@ import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.backend.PlayerSkinAdapter;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 
+import java.util.Optional;
+
 public interface Pet
 {
 
@@ -22,9 +24,9 @@ public interface Pet
 	@Nullable PetEntity setEntity(@Nullable PetEntity entity);
 
 
-	@Nullable <T> T select(@NotNull final PetAttribute<T> attribute);
+	@NotNull <T> Optional<T> select(@NotNull final PetAttribute<T> attribute);
 
-	@Nullable <T> T update(@NotNull final PetAttribute<T> attribute, @Nullable T value);
+	@NotNull <T> Optional<T> update(@NotNull final PetAttribute<T> attribute, @Nullable T value);
 
 
 	void pushAttrs(@NotNull final AcolytesPlugin plugin);
@@ -35,11 +37,7 @@ public interface Pet
 		final ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
 		final ItemMeta  meta = head.getItemMeta();
 
-		final String skin = select(PetAttributes.SKIN);
-		if (skin != null)
-		{
-			adapter.updateSkullMeta(((SkullMeta) meta), skin);
-		}
+		select(PetAttributes.SKIN).ifPresent(skin -> adapter.updateSkullMeta(((SkullMeta) meta), skin));
 
 		meta.setDisplayName(" ");
 		meta.addItemFlags(ItemFlag.values());

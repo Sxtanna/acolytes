@@ -56,11 +56,9 @@ public final class MenuPets extends Menu
 			final ItemStack item = entry.getValue().createHeadItem(plugin.getModule().getAdapter());
 			final ItemMeta  meta = item.getItemMeta();
 
-			final String name = entry.getValue().select(PetAttributes.NAME);
-			if (name != null)
-			{
+			entry.getValue().select(PetAttributes.NAME).ifPresent(name -> {
 				meta.setDisplayName(Colors.colorize(name));
-			}
+			});
 
 			item.setItemMeta(meta);
 

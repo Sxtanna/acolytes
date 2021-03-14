@@ -96,7 +96,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 			                                 false);
 		}
 
-		final String oldName = pet.update(PetAttributes.NAME, newName);
+		final String oldName = pet.update(PetAttributes.NAME, newName).orElse(null);
 		pet.pushAttrs(plugin);
 
 		plugin.send(sender,

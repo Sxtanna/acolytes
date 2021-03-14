@@ -50,12 +50,7 @@ public final class ObjectCodecPet implements ObjectCodec<Pet>
 	{
 		for (final PetAttribute<?> attr : PetAttributes.ATTRIBUTES.values())
 		{
-			final Object data = value.select(attr);
-
-			if (data != null)
-			{
-				yaml.set(attr.getName(), data);
-			}
+			value.select(attr).ifPresent(data -> yaml.set(attr.getName(), data));
 		}
 	}
 

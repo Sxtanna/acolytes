@@ -59,7 +59,7 @@ public final class PetRepositoryLocal implements PetRepository
 
 			ObjectCodecPet.INSTANCE.push(yaml, pet);
 
-			yaml.save(new File(defaults, String.format("%s.yml", pet.select(PetAttributes.UUID))));
+			yaml.save(new File(defaults, String.format("%s.yml", pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")))));
 		}
 		catch (final IOException ex)
 		{

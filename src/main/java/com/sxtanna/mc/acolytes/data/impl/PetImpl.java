@@ -55,20 +55,20 @@ public final class PetImpl implements Pet
 
 
 	@Override
-	public <T> @Nullable T select(@NotNull final PetAttribute<T> attribute)
+	public @NotNull <T> Optional<T> select(@NotNull final PetAttribute<T> attribute)
 	{
-		return attribute.getType().cast(this.attributes.get(attribute.getName()));
+		return Optional.ofNullable(attribute.getType().cast(this.attributes.get(attribute.getName())));
 	}
 
 	@Override
-	public <T> @Nullable T update(@NotNull final PetAttribute<T> attribute, @Nullable final T value)
+	public @NotNull <T> Optional<T> update(@NotNull final PetAttribute<T> attribute, @Nullable final T value)
 	{
 		if (!attribute.isMutable() && this.attributes.containsKey(attribute.getName()))
 		{
 			throw new IllegalStateException(String.format("attribute %s is not mutable", attribute.getName()));
 		}
 
-		return attribute.getType().cast(this.attributes.put(attribute.getName(), value));
+		return Optional.ofNullable(attribute.getType().cast(this.attributes.put(attribute.getName(), value)));
 	}
 
 
@@ -81,18 +81,14 @@ public final class PetImpl implements Pet
 			return;
 		}
 
-		final String uuid = select(PetAttributes.UUID);
-		if (uuid != null)
-		{
+		select(PetAttributes.UUID).ifPresent(uuid -> {
 			entity.setMetadata("acolyte_uuid", new FixedMetadataValue(plugin, uuid));
-		}
+		});
 
-		final String name = select(PetAttributes.NAME);
-		if (name != null)
-		{
+		select(PetAttributes.NAME).ifPresent(name -> {
 			entity.setCustomName(Colors.colorize(name));
 			entity.setCustomNameVisible(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_NAME_VISIBLE));
-		}
+		});
 
 		if (entity instanceof LivingEntity)
 		{

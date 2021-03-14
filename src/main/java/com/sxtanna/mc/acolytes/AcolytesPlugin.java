@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sxtanna.mc.acolytes.cmds.CommandAcolytes;
@@ -22,7 +23,16 @@ import co.aikar.commands.PaperCommandManager;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import co.aikar.locales.MessageKeyProvider;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.logging.Level;
+
+import static com.google.common.io.Files.getFileExtension;
+import static com.google.common.io.Files.getNameWithoutExtension;
 
 public final class AcolytesPlugin extends JavaPlugin
 {
@@ -63,8 +73,9 @@ public final class AcolytesPlugin extends JavaPlugin
 	{
 		getModule().load();
 
+		saveDefaultLanguageFiles();
 		initializeCommandManager();
-		// todo: load lang files?
+		loadStorageLanguageFiles();
 	}
 
 	@Override
@@ -135,6 +146,74 @@ public final class AcolytesPlugin extends JavaPlugin
 
 		manager.registerCommand(new CommandAcolytes(this));
 		manager.registerCommand(new CommandAcolytesAdmin(this));
+	}
+
+	private void saveDefaultLanguageFiles()
+	{
+		final File path = new File(getDataFolder(), "lang");
+		if (!path.exists() && !path.mkdirs())
+		{
+			return;
+		}
+
+		final String[] langs = {"en-US.yml"};
+
+		for (final String lang : langs)
+		{
+			final File file = new File(path, lang);
+			if (file.exists())
+			{
+				continue;
+			}
+
+			try (final InputStream resource = getResource("lang/" + lang))
+			{
+				if (resource == null)
+				{
+					continue;
+				}
+
+				Files.copy(resource, file.toPath());
+			}
+			catch (IOException ex)
+			{
+				getLogger().log(Level.WARNING, "could not save language file for " + lang, ex);
+			}
+		}
+	}
+
+	private void loadStorageLanguageFiles()
+	{
+		if (manager == null)
+		{
+			return;
+		}
+
+		//noinspection UnstableApiUsage
+		final File[] langs = new File(getDataFolder(), "lang").listFiles(($, name) -> getFileExtension(name).equalsIgnoreCase("yml"));
+		if (langs == null || langs.length <= 0)
+		{
+			return;
+		}
+
+
+		for (final File lang : langs)
+		{
+			//noinspection UnstableApiUsage
+			final Locale locale = Locale.forLanguageTag(getNameWithoutExtension(lang.getName()));
+
+			try
+			{
+				manager.addSupportedLanguage(locale);
+				manager.getLocales().loadYamlLanguageFile(lang, locale);
+
+				getLogger().info("loaded locale: " + locale.getDisplayName());
+			}
+			catch (final IOException | InvalidConfigurationException ex)
+			{
+				getLogger().log(Level.WARNING, "could not load language file for " + lang, ex);
+			}
+		}
 	}
 
 }

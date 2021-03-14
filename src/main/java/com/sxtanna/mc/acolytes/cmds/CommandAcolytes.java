@@ -65,6 +65,7 @@ public final class CommandAcolytes extends BaseCommand
 		}
 
 		final String oldName = pet.update(PetAttributes.NAME, newName);
+		pet.pushAttrs(plugin);
 
 		// todo: send message "pet name has been updated from `oldName` to `newName`"
 

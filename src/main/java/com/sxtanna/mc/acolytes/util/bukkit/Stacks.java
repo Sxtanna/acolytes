@@ -3,6 +3,7 @@ package com.sxtanna.mc.acolytes.util.bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -61,6 +62,11 @@ public enum Stacks
 	public static void lore(@NotNull final ItemMeta meta, @NotNull final Iterable<String> lore)
 	{
 		meta.setLore(StreamSupport.stream(lore.spliterator(), false).map(Colors::colorize).collect(Collectors.toList()));
+	}
+
+	public static void flag(@NotNull final ItemMeta meta, @NotNull final ItemFlag... flags)
+	{
+		meta.addItemFlags(flags);
 	}
 
 }

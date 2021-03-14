@@ -24,10 +24,9 @@ public enum PetResolver implements IssuerAwareContextResolver<Pet, BukkitCommand
 	{
 		final AcolytesPlugin plugin = AcolytesPlugin.get();
 
-		final String uuid = context.popFirstArg();
-
 		if (context.hasFlag("by_uuid"))
 		{
+			final String uuid = context.popFirstArg();
 			if (uuid == null)
 			{
 				throw new InvalidCommandArgument("You must supply the uuid of a pet", false);
@@ -58,6 +57,7 @@ public enum PetResolver implements IssuerAwareContextResolver<Pet, BukkitCommand
 
 		if (context.hasFlag("target"))
 		{
+			final String uuid = context.popFirstArg();
 			if (uuid == null)
 			{
 				throw new InvalidCommandArgument("You must supply the uuid of the player's pet", false);

@@ -118,24 +118,10 @@ public final class PetControllerLocal implements PetController, Listener
 	public void load(@NotNull final Player player, @NotNull final Pet pet)
 	{
 		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation(), getPetConfig());
-		pet.setEntity(entity);
-
 		entity.setTargetEntity(player);
 
-
-		final Entity bukkit = entity.getBukkitEntity();
-
-		final String name = pet.select(PetAttributes.NAME);
-		if (name != null)
-		{
-			bukkit.setCustomName(Colors.colorize(name));
-			bukkit.setCustomNameVisible(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_NAME_VISIBLE));
-		}
-
-		if (bukkit instanceof LivingEntity)
-		{
-			((LivingEntity) bukkit).getEquipment().setHelmet(pet.createHeadItem(plugin.getModule().getAdapter()));
-		}
+		pet.setEntity(entity);
+		pet.pushAttrs(plugin);
 
 		this.active.put(player.getUniqueId(), pet);
 	}

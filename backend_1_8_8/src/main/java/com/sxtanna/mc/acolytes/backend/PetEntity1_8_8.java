@@ -56,9 +56,9 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 
 
 	@Override
-	public void setTargetEntity(@NotNull final org.bukkit.entity.Entity entity)
+	public void setTargetEntity(@Nullable final org.bukkit.entity.Entity entity)
 	{
-		this.target = ((CraftEntity) entity).getHandle();
+		this.target = entity == null ? null : ((CraftEntity) entity).getHandle();
 	}
 
 

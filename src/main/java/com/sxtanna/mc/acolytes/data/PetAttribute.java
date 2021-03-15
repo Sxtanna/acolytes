@@ -21,10 +21,7 @@ public interface PetAttribute<T> extends ObjectCodec<T>
 
 	@NotNull Class<T> getType();
 
-	default boolean isMutable()
-	{
-		return true;
-	}
+	boolean isMutable();
 
 
 	static <T> PetAttribute.Builder<T> builder(@NotNull final Class<T> type, @NotNull final String name)
@@ -42,7 +39,7 @@ public interface PetAttribute<T> extends ObjectCodec<T>
 
 		private T defaultAttr;
 
-		private boolean mutable;
+		private boolean mutable = true;
 
 		private Function<T, T> copy;
 

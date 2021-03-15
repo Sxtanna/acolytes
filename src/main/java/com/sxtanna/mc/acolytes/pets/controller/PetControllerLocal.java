@@ -13,20 +13,25 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetConfig;
 import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.menu.impl.MenuOpts;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -340,6 +345,24 @@ public final class PetControllerLocal implements PetController, Listener
 				load(player, pet);
 			}, 5L);
 		});
+	}
+
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityInteract(@NotNull final PlayerInteractAtEntityEvent event)
+	{
+		final Player player = event.getPlayer();
+		final Entity entity = event.getRightClicked();
+
+		final List<MetadataValue> meta = entity.getMetadata("acolytes_pet");
+		if (meta.isEmpty())
+		{
+			return;
+		}
+
+		event.setCancelled(true);
+
+		new MenuOpts(plugin, ((Pet) meta.get(0).value()), player).open(player);
 	}
 
 }

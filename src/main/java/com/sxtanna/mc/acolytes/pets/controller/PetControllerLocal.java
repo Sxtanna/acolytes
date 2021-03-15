@@ -147,6 +147,7 @@ public final class PetControllerLocal implements PetController, Listener
 			return; // not spawned
 		}
 
+		entity.setTargetEntity(null);
 		entity.getBukkitEntity().remove();
 	}
 

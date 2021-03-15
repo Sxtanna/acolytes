@@ -14,10 +14,12 @@ import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static com.sxtanna.mc.acolytes.menu.Menu.Size.forCount;
 import static com.sxtanna.mc.acolytes.util.bukkit.Colors.colorize;
@@ -83,6 +85,16 @@ public final class MenuPets extends Menu
 					lore.addAll(asList((target.getEntity() != null ?
 					                    plugin.lang(player, Lang.MENU__BUTTONS__REMOVE) :
 					                    plugin.lang(player, Lang.MENU__BUTTONS__SUMMON)).split("\n")));
+
+					target.select(PetAttributes.PERK_EFFECT).ifPresent(perk -> {
+						lore.add(" ");
+						lore.add("&7" + perk.getName());
+					});
+
+					target.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(perk -> {
+						lore.add(" ");
+						lore.addAll(Arrays.stream(perk.getName().split("\n")).map(name -> "&7" + name).collect(Collectors.toList()));
+					});
 				}
 
 				Stacks.lore(meta, lore);

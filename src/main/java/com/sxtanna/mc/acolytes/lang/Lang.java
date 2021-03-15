@@ -17,6 +17,12 @@ public enum Lang implements MessageKeyProvider
 	MENU__SPAWNED,
 	MENU__REMOVED,
 
+	MENU__BUTTONS__NOT_GIVEN,
+	MENU__BUTTONS__HAS_GIVEN,
+
+	MENU__BUTTONS__SUMMON,
+	MENU__BUTTONS__REMOVE,
+
 	;
 
 

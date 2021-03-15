@@ -9,3 +9,8 @@ cmds:
 menu:
   spawned: "&7You have summoned&r {pet_name}&r"
   removed: "{pet_name}&r &7was sent away!"
+  buttons:
+    has-given: "  &aUnlocked"
+    not-given: "  &7Locked"
+    summon: " \n&7Click to Summon!"
+    remove: " \n&7Click to Send Away!"

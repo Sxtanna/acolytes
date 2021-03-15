@@ -77,7 +77,7 @@ public final class PetRepositoryLocal implements PetRepository
 	@Contract("_ -> new")
 	private @NotNull File file(@NotNull final UUID uuid)
 	{
-		return new File(this.folder, String.format("%s.json", uuid));
+		return new File(this.folder, String.format("%s.yml", uuid));
 	}
 
 

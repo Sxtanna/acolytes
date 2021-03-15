@@ -61,6 +61,18 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 		this.target = entity == null ? null : ((CraftEntity) entity).getHandle();
 	}
 
+	@Override
+	public @Nullable org.bukkit.entity.Entity getTargetEntity()
+	{
+		return this.target == null ? null : this.target.getBukkitEntity();
+	}
+
+	@Override
+	public @NotNull CraftEntity getBukkitEntity()
+	{
+		return super.getBukkitEntity();
+	}
+
 
 	@Override
 	public boolean damageEntity(final DamageSource damagesource, final float f)
@@ -74,11 +86,13 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 
 	}
 
+
 	@Override
 	public void move(final double x, final double y, final double z)
 	{
 		super.move(x, 0, z);
 	}
+
 
 	@Override
 	public void K()

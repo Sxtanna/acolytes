@@ -10,6 +10,8 @@ public interface PetEntity
 
 	void setTargetEntity(@Nullable final Entity entity);
 
+	@Nullable Entity getTargetEntity();
+
 
 	@NotNull Entity getBukkitEntity();
 

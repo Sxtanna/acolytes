@@ -32,6 +32,11 @@ public interface Pet
 	void pushAttrs(@NotNull final AcolytesPlugin plugin);
 
 
+	default @NotNull String getUuid()
+	{
+		return select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet does not have a uuid?"));
+	}
+
 	default @NotNull ItemStack createHeadItem(@NotNull final PlayerSkinAdapter adapter)
 	{
 		return Stacks.item(Material.SKULL_ITEM, 1, 3, meta ->

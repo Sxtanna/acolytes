@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 
+import com.sxtanna.mc.acolytes.util.bukkit.Format;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public abstract class Perk
 
 		public Effect(@NotNull final PotionEffect effect)
 		{
-			super(String.format("%s %d", effect.getType().getName(), effect.getAmplifier() + 1));
+			super(Format.format(effect));
 
 			this.effect = effect;
 		}
@@ -72,7 +74,7 @@ public abstract class Perk
 
 		public EffectGroup(@NotNull final List<PotionEffect> effects)
 		{
-			super(effects.stream().map(effect -> String.format("%s %d", effect.getType().getName(), effect.getAmplifier() + 1)).collect(Collectors.joining("\n")));
+			super(effects.stream().map(Format::format).collect(Collectors.joining("\n")));
 
 			this.effects = effects;
 		}

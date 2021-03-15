@@ -17,6 +17,7 @@ import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -94,6 +95,30 @@ public final class PetImpl implements Pet
 		{
 			((LivingEntity) entity).getEquipment().setHelmet(createHeadItem(plugin.getModule().getAdapter()));
 		}
+	}
+
+
+	@Override
+	public boolean equals(final Object o)
+	{
+		if (this == o)
+		{
+			return true;
+		}
+		if (!(o instanceof PetImpl))
+		{
+			return false;
+		}
+
+		final PetImpl that = (PetImpl) o;
+		return Objects.deepEquals(this.attributes.get(PetAttributes.UUID.getName()),
+		                          that.attributes.get(PetAttributes.UUID.getName()));
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(this.attributes.get(PetAttributes.UUID.getName()));
 	}
 
 }

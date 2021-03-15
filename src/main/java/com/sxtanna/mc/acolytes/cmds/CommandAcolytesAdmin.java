@@ -77,7 +77,46 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@CommandPermission("pets.admin.give")
 	public void give(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("by_uuid") final Pet pet)
 	{
-		plugin.getModule().getController().give(target.getPlayer(), pet);
+		if (!plugin.getModule().getController().give(target.getPlayer(), pet))
+		{
+
+			plugin.send(sender,
+			            Lang.CMDS__ADMIN__GIVE__FAIL,
+
+			            "{target}",
+			            target.getPlayer().getName(),
+
+			            "{reason}",
+			            "pet already given",
+
+			            "{pet_name}",
+			            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+			return;
+		}
+
+		plugin.send(sender,
+		            Lang.CMDS__ADMIN__GIVE__SENDER,
+
+		            "{target}",
+		            target.getPlayer().getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+		if (sender.equals(target.getPlayer()))
+		{
+			return;
+		}
+
+		plugin.send(target.getPlayer(),
+		            Lang.CMDS__ADMIN__GIVE__TARGET,
+
+		            "{sender}",
+		            sender.getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
 	}
 
 	@Subcommand("take")
@@ -85,7 +124,46 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@CommandPermission("pets.admin.take")
 	public void take(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("by_uuid") final Pet pet)
 	{
-		plugin.getModule().getController().take(target.getPlayer(), pet);
+		if (!plugin.getModule().getController().take(target.getPlayer(), pet))
+		{
+
+			plugin.send(sender,
+			            Lang.CMDS__ADMIN__TAKE__FAIL,
+
+			            "{target}",
+			            target.getPlayer().getName(),
+
+			            "{reason}",
+			            "pet not given",
+
+			            "{pet_name}",
+			            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+			return;
+		}
+
+		plugin.send(sender,
+		            Lang.CMDS__ADMIN__TAKE__SENDER,
+
+		            "{target}",
+		            target.getPlayer().getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+		if (sender.equals(target.getPlayer()))
+		{
+			return;
+		}
+
+		plugin.send(target.getPlayer(),
+		            Lang.CMDS__ADMIN__TAKE__TARGET,
+
+		            "{sender}",
+		            sender.getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
 	}
 
 
@@ -129,7 +207,6 @@ public final class CommandAcolytesAdmin extends BaseCommand
 
 		            "{old_name}",
 		            oldName != null ? oldName : "");
-
 	}
 
 }

@@ -101,22 +101,26 @@ public final class AcolytesPlugin extends JavaPlugin
 	}
 
 
+	public @NotNull String lang(@NotNull final CommandSender sender, @NotNull final MessageKeyProvider provider, @NotNull final String... replacements)
+	{
+		if (this.manager == null)
+		{
+			return "";
+		}
+
+		final String message = manager.getLocales().getMessage(manager.getCommandIssuer(sender), provider.getMessageKey());
+
+		return Colors.colorize(replacements.length == 0 ? message : ACFUtil.replaceStrings(message, replacements));
+	}
+
 	public void send(@NotNull final CommandSender sender, @NotNull final MessageKeyProvider provider, @NotNull final String... replacements)
 	{
-		if (manager == null)
+		if (this.manager == null)
 		{
 			return;
 		}
 
-		final BukkitCommandIssuer issuer = manager.getCommandIssuer(sender);
-
-		String message = manager.getLocales().getMessage(issuer, provider.getMessageKey());
-		if (replacements.length != 0)
-		{
-			message = ACFUtil.replaceStrings(message, replacements);
-		}
-
-		issuer.sendMessage(Colors.colorize(message));
+		sender.sendMessage(lang(sender, provider, replacements));
 	}
 
 

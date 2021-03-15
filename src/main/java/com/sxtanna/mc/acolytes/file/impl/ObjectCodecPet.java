@@ -12,45 +12,40 @@ import com.sxtanna.mc.acolytes.file.ObjectCodec;
 
 import java.util.Locale;
 
-public final class ObjectCodecPet implements ObjectCodec<Pet>
+public enum ObjectCodecPet implements ObjectCodec<Pet>
 {
-
-	@NotNull
-	public static final ObjectCodec<Pet> INSTANCE = new ObjectCodecPet();
+	INSTANCE;
 
 
 	@Override
-	public @NotNull Pet pull(@NotNull final ConfigurationSection yaml)
+	public final @NotNull Pet pull(@NotNull final ConfigurationSection yaml)
 	{
 		final Pet pet = new PetImpl();
 
 		for (final String name : yaml.getKeys(false))
 		{
-			switch (name.toLowerCase(Locale.ROOT))
+			//noinspection rawtypes
+			final PetAttribute attr = PetAttributes.ATTRIBUTES.get(name.toLowerCase(Locale.ROOT));
+			if (attr == null)
 			{
-				case "uuid":
-					pet.update(PetAttributes.UUID, PetAttributes.UUID.getType().cast(yaml.get(name)));
-					break;
-				case "name":
-					pet.update(PetAttributes.NAME, PetAttributes.NAME.getType().cast(yaml.get(name)));
-					break;
-				case "skin":
-					pet.update(PetAttributes.SKIN, PetAttributes.SKIN.getType().cast(yaml.get(name)));
-					break;
-				default:
-					throw new IllegalStateException(String.format("unknown attribute in pet: %s", name));
+				throw new IllegalStateException(String.format("unknown attribute in pet: %s", name));
 			}
+
+			//noinspection unchecked
+			pet.update(attr, attr.pull(yaml));
 		}
 
 		return pet;
 	}
 
 	@Override
-	public void push(@NotNull final ConfigurationSection yaml, @NotNull final Pet value)
+	public final void push(@NotNull final ConfigurationSection yaml, @NotNull final Pet value)
 	{
-		for (final PetAttribute<?> attr : PetAttributes.ATTRIBUTES.values())
+		//noinspection rawtypes
+		for (final PetAttribute attr : PetAttributes.ATTRIBUTES.values())
 		{
-			value.select(attr).ifPresent(data -> yaml.set(attr.getName(), data));
+			//noinspection unchecked
+			value.select(attr).ifPresent(data -> attr.push(yaml, data));
 		}
 	}
 

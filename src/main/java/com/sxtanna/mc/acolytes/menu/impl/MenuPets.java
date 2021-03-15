@@ -110,6 +110,7 @@ public final class MenuPets extends Menu
 
 					if (active.get().equals(loaded))
 					{
+						redo();
 						return; // only despawn
 					}
 				}

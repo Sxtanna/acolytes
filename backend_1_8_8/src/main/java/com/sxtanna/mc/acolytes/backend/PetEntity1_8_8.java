@@ -3,11 +3,9 @@ package com.sxtanna.mc.acolytes.backend;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.util.Vector;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.server.v1_8_R3.Block;
@@ -22,6 +20,8 @@ import net.minecraft.server.v1_8_R3.WorldServer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.util.concurrent.ThreadLocalRandom.current;
 
 public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 {
@@ -152,9 +152,9 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 			}
 
 			final EntityTrackerEntry entry = ((WorldServer) world).tracker.trackedEntities.get(getId());
-			entry.m = entry.c;
+			entry.m    = entry.c;
 			entry.xRot = -4;
-			entry.i = -4;
+			entry.i    = -4;
 
 			setPositionRotation(locX, locY, locZ, ((float) Math.toDegrees(Math.atan2(-vecX, vecZ))), 0.0f);
 
@@ -260,25 +260,41 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 		@Override
 		public void update()
 		{
-			double vecX = target.locX;
-			double vecY = target.locY;
-			double vecZ = target.locZ;
+			final double tarX = target.locX;
+			final double tarY = target.locY;
+			final double tarZ = target.locZ;
 
-			vecX -= locX;
-			vecY -= locY;
-			vecZ -= locZ;
+			double vecX = tarX - locX;
+			double vecY = tarY - locY;
+			double vecZ = tarZ - locZ;
 
 			final double len = Math.sqrt((vecX * vecX) + (vecY * vecY) + (vecZ * vecZ));
-			vecX /= len;
-			vecY /= len;
-			vecZ /= len;
 
-			final double mul = config.getFollowSpeed() * 0.25;
-			vecX *= mul;
-			vecY *= mul;
-			vecZ *= mul;
+			if (len >= config.getTeleportDistance())
+			{
+				final double offX = config.getTeleportOffsetX();
+				final double offY = config.getTeleportOffsetY();
+				final double offZ = config.getTeleportOffsetZ();
 
-			setPosition(locX += vecX, locY += vecY, locZ += vecZ);
+				setPosition(tarX + current().nextDouble(-offX, +offX),
+				            tarY + current().nextDouble(-offY, +offY),
+				            tarZ + current().nextDouble(-offZ, +offZ));
+			}
+			else
+			{
+				vecX /= len;
+				vecY /= len;
+				vecZ /= len;
+
+				final double mul = config.getFollowSpeed() * 0.25;
+				vecX *= mul;
+				vecY *= mul;
+				vecZ *= mul;
+
+				setPosition(locX + vecX,
+				            locY + vecY,
+				            locZ + vecZ);
+			}
 		}
 
 		@Override

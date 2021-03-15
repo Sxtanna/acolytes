@@ -196,21 +196,31 @@ public final class PetControllerLocal implements PetController, Listener
 
 	private void kill(@NotNull final Player player)
 	{
-		final Collection<Pet> values = Optional.ofNullable(this.cached.remove(player.getUniqueId())).map(Map::values).orElse(null);
+		save(player, true);
+	}
+
+	private void save(@NotNull final Player player, final boolean remove)
+	{
+		final Collection<Pet> values = Optional.ofNullable(!remove ? this.cached.get(player.getUniqueId()) : this.cached.remove(player.getUniqueId())).map(Map::values).orElse(null);
+
 		if (values == null || values.isEmpty())
 		{
-			return;
+			plugin.getModule()
+			      .getRepository()
+			      .delete(player.getUniqueId()); // maybe not a great idea?
 		}
-
-		plugin.getModule()
-		      .getRepository()
-		      .insert(player.getUniqueId(), values)
-		      .whenComplete((pass, fail) -> {
-			      if (fail != null)
-			      {
-				      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to insert pets into repository for %s", player.getUniqueId()), fail);
-			      }
-		      });
+		else
+		{
+			plugin.getModule()
+			      .getRepository()
+			      .insert(player.getUniqueId(), values)
+			      .whenComplete((pass, fail) -> {
+				      if (fail != null)
+				      {
+					      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to insert pets into repository for %s", player.getUniqueId()), fail);
+				      }
+			      });
+		}
 	}
 
 

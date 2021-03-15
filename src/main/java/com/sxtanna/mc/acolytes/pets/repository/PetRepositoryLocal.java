@@ -7,12 +7,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.data.Pet;
-import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.data.impl.PetImpl;
 import com.sxtanna.mc.acolytes.file.impl.ObjectCodecPet;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,7 +46,7 @@ public final class PetRepositoryLocal implements PetRepository
 		checkState(this.folder.exists() || this.folder.mkdirs(), "could not create pet-repository folder");
 
 		final File defaults = new File(this.folder, "defaults");
-		if (defaults.exists() || !defaults.mkdirs())
+		if (defaults.exists())
 		{
 			return;
 		}
@@ -59,7 +59,7 @@ public final class PetRepositoryLocal implements PetRepository
 
 			ObjectCodecPet.INSTANCE.push(yaml, pet);
 
-			yaml.save(new File(defaults, String.format("%s.yml", pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")))));
+			yaml.save(new File(defaults, String.format("%s.yml", pet.getUuid())));
 		}
 		catch (final IOException ex)
 		{
@@ -120,19 +120,71 @@ public final class PetRepositoryLocal implements PetRepository
 	@Override
 	public @NotNull CompletableFuture<Collection<Pet>> select(@NotNull final UUID uuid)
 	{
-		return CompletableFuture.completedFuture(null);
+		return CompletableFuture.supplyAsync(() -> {
+
+			final File file = file(uuid);
+			if (!file.exists())
+			{
+				return Collections.emptyList();
+			}
+
+			final YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+
+			final List<Pet> pets = new ArrayList<>();
+
+			for (final String key : yaml.getKeys(false))
+			{
+				try
+				{
+					pets.add(ObjectCodecPet.INSTANCE.pull(yaml.getConfigurationSection(key)));
+				}
+				catch (final IllegalStateException ex)
+				{
+					throw new CompletionException(String.format("failed to read pet from file: %s", file), ex);
+				}
+			}
+
+			return pets;
+		});
 	}
 
 	@Override
 	public @NotNull CompletableFuture<Void> delete(@NotNull final UUID uuid)
 	{
-		return CompletableFuture.completedFuture(null);
+		return CompletableFuture.runAsync(() -> {
+			try
+			{
+				Files.delete(file(uuid).toPath());
+			}
+			catch (final IOException ex)
+			{
+				throw new CompletionException("failed to delete file", ex);
+			}
+		});
 	}
 
 	@Override
 	public @NotNull CompletableFuture<Void> insert(@NotNull final UUID uuid, @NotNull final Collection<Pet> pets)
 	{
-		return CompletableFuture.completedFuture(null);
+		return CompletableFuture.runAsync(() -> {
+
+			final YamlConfiguration yaml = new YamlConfiguration();
+
+			for (final Pet pet : pets)
+			{
+				ObjectCodecPet.INSTANCE.push(yaml.createSection(pet.getUuid()), pet);
+			}
+
+			try
+			{
+				yaml.save(file(uuid));
+			}
+			catch (final IOException ex)
+			{
+				throw new CompletionException("failed to save yaml file", ex);
+			}
+
+		});
 	}
 
 }

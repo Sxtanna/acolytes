@@ -4,13 +4,19 @@ import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetConfig;
@@ -133,6 +139,8 @@ public final class PetControllerLocal implements PetController, Listener
 
 		pet.setEntity(entity);
 		pet.pushAttrs(plugin);
+
+		entity.getBukkitEntity().setMetadata("acolytes_pet", new FixedMetadataValue(plugin, pet));
 
 		this.active.put(player.getUniqueId(), pet);
 	}
@@ -273,6 +281,65 @@ public final class PetControllerLocal implements PetController, Listener
 	public void onQuit(@NotNull final PlayerQuitEvent event)
 	{
 		kill(event.getPlayer());
+	}
+
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onEntityPortal(@NotNull final EntityPortalEvent event)
+	{
+		final Entity entity = event.getEntity();
+		if (entity.getMetadata("acolytes_pet").isEmpty())
+		{
+			return;
+		}
+
+		event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onEntityTeleport(@NotNull final EntityTeleportEvent event)
+	{
+		final Entity entity = event.getEntity();
+		if (entity.getMetadata("acolytes_pet").isEmpty())
+		{
+			return;
+		}
+
+		final World into = event.getTo().getWorld();
+		final World from = event.getFrom().getWorld();
+
+		if (into.equals(from))
+		{
+			return;
+		}
+
+		event.setCancelled(true);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onPlayerTeleport(@NotNull final PlayerTeleportEvent event)
+	{
+		final World into = event.getTo().getWorld();
+		final World from = event.getFrom().getWorld();
+
+		if (into.equals(from))
+		{
+			return;
+		}
+
+		final Player player = event.getPlayer();
+
+		getActive(player).ifPresent(pet -> {
+
+			kill(player, pet);
+
+			// todo: world blacklist?
+
+			plugin.getServer().getScheduler().runTaskLater(plugin, () ->
+			{
+				load(player, pet);
+			}, 5L);
+		});
 	}
 
 }

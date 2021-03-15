@@ -43,6 +43,15 @@ public final class PetImpl implements Pet
 
 
 	@Override
+	public @NotNull Pet copy()
+	{
+		final PetImpl copy = new PetImpl();
+		copy.attributes.putAll(this.attributes);
+
+		return copy;
+	}
+
+	@Override
 	public @Nullable PetEntity getEntity()
 	{
 		return this.liveEntity.get();

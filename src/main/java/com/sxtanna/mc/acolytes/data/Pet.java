@@ -19,6 +19,9 @@ import java.util.Optional;
 public interface Pet
 {
 
+	@NotNull Pet copy();
+
+
 	@Nullable PetEntity getEntity();
 
 	@Nullable PetEntity setEntity(@Nullable PetEntity entity);

@@ -77,7 +77,15 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	@CommandPermission("pets.admin.give")
 	public void give(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("by_uuid") final Pet pet)
 	{
-		// todo: give them access to the target pet
+		plugin.getModule().getController().give(target.getPlayer(), pet);
+	}
+
+	@Subcommand("take")
+	@CommandCompletion("@players @pets")
+	@CommandPermission("pets.admin.take")
+	public void take(@NotNull final CommandSender sender, @NotNull final OnlinePlayer target, @NotNull @Flags("by_uuid") final Pet pet)
+	{
+		plugin.getModule().getController().take(target.getPlayer(), pet);
 	}
 
 

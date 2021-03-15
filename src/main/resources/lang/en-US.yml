@@ -2,6 +2,14 @@ cmds:
   users:
     name-update: "&7Pet name has been updated from&r {old_name}&r &7to&r {new_name}&r"
   admin:
+    give:
+      fail: "&7Failed to give&r {pet_name}&r &7to&r {target}&r &7: &c{reason}&r"
+      sender: "&7You have successfully given&r {pet_name}&r &7to&r {target}&r"
+      target: "&7You have received&r {pet_name}&r &7from&r {sender}&r"
+    take:
+      fail: "&7Failed to take&r {pet_name}&r &7from&r {target}&r &7: &c{reason}&r"
+      sender: "&7You have successfully taken&r {pet_name}&r &7from&r {target}&r"
+      target: "{pet_name}&r &7was taken from you by&r {sender}&r"
     name-update:
       sender: "&7Pet name has been updated from&r {old_name}&r &7to&r {new_name}&r"
       target: "&7Your pet's name has been updated from&r {old_name}&r &7to&r {new_name}&r"

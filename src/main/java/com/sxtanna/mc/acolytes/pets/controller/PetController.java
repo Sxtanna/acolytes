@@ -53,4 +53,9 @@ public interface PetController extends State
 
 	void kill(@NotNull final Player player, @NotNull final Pet pet);
 
+
+	void give(@NotNull final Player player, @NotNull final Pet pet);
+
+	void take(@NotNull final Player player, @NotNull final Pet pet);
+
 }

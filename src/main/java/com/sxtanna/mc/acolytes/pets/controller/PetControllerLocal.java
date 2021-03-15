@@ -59,11 +59,9 @@ public final class PetControllerLocal implements PetController, Listener
 			{
 				this.plugin.getLogger().log(Level.SEVERE, "failed to select default pets from repository", fail);
 			}
-			else if (pass != null)
+			else if (pass != null && !pass.isEmpty())
 			{
-				this.loaded.putAll(pass.stream()
-				                       .collect(toMap(pet -> pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")),
-				                                      Function.identity())));
+				this.loaded.putAll(pass.stream().collect(toMap(Pet::getUuid, Function.identity())));
 			}
 		});
 
@@ -96,11 +94,13 @@ public final class PetControllerLocal implements PetController, Listener
 		return Optional.ofNullable(this.cached.get(player)).orElse(Collections.emptyMap());
 	}
 
+
 	@Override
 	public @NotNull Optional<Pet> getActive(@NotNull final UUID player)
 	{
 		return Optional.ofNullable(this.active.get(player));
 	}
+
 
 	@Override
 	public @NotNull Optional<Pet> getByUuid(@NotNull final String uuid)
@@ -151,6 +151,31 @@ public final class PetControllerLocal implements PetController, Listener
 	}
 
 
+	@Override
+	public void give(@NotNull final Player player, @NotNull final Pet pet)
+	{
+		final Map<String, Pet> pets = this.cached.computeIfAbsent(player.getUniqueId(), ($) -> new HashMap<>());
+		if (pets.containsKey(pet.getUuid()))
+		{
+			return;
+		}
+
+		pets.put(pet.getUuid(), pet.copy());
+	}
+
+	@Override
+	public void take(@NotNull final Player player, @NotNull final Pet pet)
+	{
+		final Map<String, Pet> pets = this.cached.get(player.getUniqueId());
+		if (pets == null || pets.isEmpty())
+		{
+			return;
+		}
+
+		pets.remove(pet.getUuid());
+	}
+
+
 	private void load(@NotNull final Player player)
 	{
 		plugin.getModule()
@@ -161,11 +186,9 @@ public final class PetControllerLocal implements PetController, Listener
 			      {
 				      this.plugin.getLogger().log(Level.SEVERE, String.format("failed to select pets from repository for %s", player.getUniqueId()), fail);
 			      }
-			      else if (pass != null)
+			      else if (pass != null && !pass.isEmpty())
 			      {
-				      this.cached.put(player.getUniqueId(), pass.stream()
-				                                                .collect(toMap(pet -> pet.select(PetAttributes.UUID).orElseThrow(() -> new IllegalStateException("pet has no uuid")),
-				                                                               Function.identity())));
+				      this.cached.put(player.getUniqueId(), pass.stream().collect(toMap(Pet::getUuid, Function.identity())));
 			      }
 		      });
 	}
@@ -173,7 +196,7 @@ public final class PetControllerLocal implements PetController, Listener
 	private void kill(@NotNull final Player player)
 	{
 		final Collection<Pet> values = Optional.ofNullable(this.cached.remove(player.getUniqueId())).map(Map::values).orElse(null);
-		if (values == null)
+		if (values == null || values.isEmpty())
 		{
 			return;
 		}

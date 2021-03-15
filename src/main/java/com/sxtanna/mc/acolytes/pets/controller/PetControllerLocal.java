@@ -162,6 +162,8 @@ public final class PetControllerLocal implements PetController, Listener
 		}
 
 		pets.put(pet.getUuid(), pet.copy());
+
+		save(player, false);
 	}
 
 	@Override
@@ -174,6 +176,8 @@ public final class PetControllerLocal implements PetController, Listener
 		}
 
 		pets.remove(pet.getUuid());
+
+		save(player, false);
 	}
 
 

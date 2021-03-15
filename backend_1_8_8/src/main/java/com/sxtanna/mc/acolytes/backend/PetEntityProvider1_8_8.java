@@ -40,12 +40,12 @@ public final class PetEntityProvider1_8_8 implements PetEntityProvider
 	}
 
 	@Override
-	public @NotNull PetEntity spawn(@NotNull final Location location, @NotNull final PetConfig config)
+	public @NotNull PetEntity spawn(@NotNull final PetConfig config, @NotNull final Location origin)
 	{
-		final PetEntity1_8_8 entity = new PetEntity1_8_8(location.getWorld(), config);
-		entity.setPositionRotation(location.getX(), location.getY(), location.getZ(),location.getYaw(), location.getPitch());
+		final PetEntity1_8_8 entity = new PetEntity1_8_8(origin.getWorld(), config);
+		entity.setPositionRotation(origin.getX(), origin.getY(), origin.getZ(), origin.getYaw(), origin.getPitch());
 
-		((CraftWorld) location.getWorld()).getHandle().addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
+		((CraftWorld) origin.getWorld()).getHandle().addEntity(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
 
 		entity.setSmall(config.isSmallHead());
 		entity.setInvisible(true);

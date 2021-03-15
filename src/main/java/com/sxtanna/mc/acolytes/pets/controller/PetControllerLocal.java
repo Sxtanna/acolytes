@@ -3,6 +3,7 @@ package com.sxtanna.mc.acolytes.pets.controller;
 import org.jetbrains.annotations.NotNull;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -117,9 +118,17 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void load(@NotNull final Player player, @NotNull final Pet pet)
 	{
-		final PetEntity entity = plugin.getModule().getProvider().spawn(player.getLocation().add(current().nextDouble(-5.0, +5.0),
-		                                                                                         current().nextDouble(-1.0, +1.0),
-		                                                                                         current().nextDouble(-5.0, +5.0)), getPetConfig());
+		final Location origin = player.getLocation();
+
+		final double offX = plugin.getConfiguration().get(AcolytesConfig.Basic.PET_SUMMON_OFFSET_X);
+		final double offY = plugin.getConfiguration().get(AcolytesConfig.Basic.PET_SUMMON_OFFSET_Y);
+		final double offZ = plugin.getConfiguration().get(AcolytesConfig.Basic.PET_SUMMON_OFFSET_Z);
+		origin.add(current().nextDouble(-offX, +offX),
+		           current().nextDouble(-offY, +offY),
+		           current().nextDouble(-offZ, +offZ));
+
+
+		final PetEntity entity = plugin.getModule().getProvider().spawn(getPetConfig(pet), origin);
 		entity.setTargetEntity(player);
 
 		pet.setEntity(entity);
@@ -231,7 +240,7 @@ public final class PetControllerLocal implements PetController, Listener
 	}
 
 
-	private @NotNull PetConfig getPetConfig()
+	private @NotNull PetConfig getPetConfig(@NotNull final Pet pet)
 	{
 		return new PetConfig(plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_SMALL_HEAD),
 		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_DETAILS_HEAD_LOOK),
@@ -244,7 +253,13 @@ public final class PetControllerLocal implements PetController, Listener
 
 		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_SPEED),
 		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MIN),
-		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX));
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_RANGE_MAX),
+
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_TELEPORT_DISTANCE),
+
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_TELEPORT_OFFSET_X),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_TELEPORT_OFFSET_Y),
+		                     plugin.getConfiguration().get(AcolytesConfig.Basic.PET_PATHING_TELEPORT_OFFSET_Z));
 	}
 
 

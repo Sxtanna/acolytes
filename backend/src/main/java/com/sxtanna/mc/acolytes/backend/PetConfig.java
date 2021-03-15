@@ -23,9 +23,32 @@ public final class PetConfig
 	private final double followRangeMin;
 	private final double followRangeMax;
 
+	private final double teleportDistance;
+
+	private final double teleportOffsetX;
+	private final double teleportOffsetY;
+	private final double teleportOffsetZ;
+
 
 	@Contract(pure = true)
-	public PetConfig(final boolean smallHead, final boolean headLook, final boolean headLookAndPitch, final boolean bobbing, final double bobbingSpeed, final double bobbingRangeShift, final double bobbingRangeLimit, final double followSpeed, final double followRangeMin, final double followRangeMax)
+	public PetConfig(final boolean smallHead,
+	                 final boolean headLook,
+	                 final boolean headLookAndPitch,
+
+	                 final boolean bobbing,
+	                 final double bobbingSpeed,
+	                 final double bobbingRangeShift,
+	                 final double bobbingRangeLimit,
+
+	                 final double followSpeed,
+	                 final double followRangeMin,
+	                 final double followRangeMax,
+
+	                 final double teleportDistance,
+
+	                 final double teleportOffsetX,
+	                 final double teleportOffsetY,
+	                 final double teleportOffsetZ)
 	{
 		this.smallHead        = smallHead;
 		this.headLook         = headLook;
@@ -36,9 +59,13 @@ public final class PetConfig
 		this.bobbingRangeShift = bobbingRangeShift;
 		this.bobbingRangeLimit = bobbingRangeLimit;
 
-		this.followSpeed    = followSpeed;
-		this.followRangeMin = followRangeMin;
-		this.followRangeMax = followRangeMax;
+		this.followSpeed      = followSpeed;
+		this.followRangeMin   = followRangeMin;
+		this.followRangeMax   = followRangeMax;
+		this.teleportDistance = teleportDistance;
+		this.teleportOffsetX  = teleportOffsetX;
+		this.teleportOffsetY  = teleportOffsetY;
+		this.teleportOffsetZ  = teleportOffsetZ;
 	}
 
 
@@ -104,6 +131,32 @@ public final class PetConfig
 	public double getFollowRangeMax()
 	{
 		return this.followRangeMax;
+	}
+
+
+	@Contract(pure = true)
+	public double getTeleportDistance()
+	{
+		return teleportDistance;
+	}
+
+
+	@Contract(pure = true)
+	public double getTeleportOffsetX()
+	{
+		return teleportOffsetX;
+	}
+
+	@Contract(pure = true)
+	public double getTeleportOffsetY()
+	{
+		return teleportOffsetY;
+	}
+
+	@Contract(pure = true)
+	public double getTeleportOffsetZ()
+	{
+		return teleportOffsetZ;
 	}
 
 }

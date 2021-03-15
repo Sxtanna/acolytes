@@ -56,6 +56,16 @@ public final class AcolytesConfig extends SettingsManagerImpl
 				newProperty("plugin.pet.custom-name.max", 16);
 
 
+		public static final Property<Double> PET_SUMMON_OFFSET_X =
+				newProperty("plugin.pet.summon.offset.x", 5.0);
+
+		public static final Property<Double> PET_SUMMON_OFFSET_Y =
+				newProperty("plugin.pet.summon.offset.y", 1.0);
+
+		public static final Property<Double> PET_SUMMON_OFFSET_Z =
+				newProperty("plugin.pet.summon.offset.z", 5.0);
+
+
 		public static final Property<Boolean> PET_DETAILS_SMALL_HEAD =
 				newProperty("plugin.pet.details.head.small", false);
 
@@ -88,6 +98,18 @@ public final class AcolytesConfig extends SettingsManagerImpl
 
 		public static final Property<Double> PET_PATHING_RANGE_MAX =
 				newProperty("plugin.pet.pathing.range.max", 5.0);
+
+		public static final Property<Double> PET_PATHING_TELEPORT_DISTANCE =
+				newProperty("plugin.pet.pathing.teleport.distance", 20.0);
+
+		public static final Property<Double> PET_PATHING_TELEPORT_OFFSET_X =
+				newProperty("plugin.pet.pathing.teleport.offset.x", 5.0);
+
+		public static final Property<Double> PET_PATHING_TELEPORT_OFFSET_Y =
+				newProperty("plugin.pet.pathing.teleport.offset.y", 1.0);
+
+		public static final Property<Double> PET_PATHING_TELEPORT_OFFSET_Z =
+				newProperty("plugin.pet.pathing.teleport.offset.z", 5.0);
 
 	}
 

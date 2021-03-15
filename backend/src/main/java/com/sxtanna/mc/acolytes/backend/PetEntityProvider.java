@@ -9,6 +9,6 @@ public interface PetEntityProvider
 
 	void initialize();
 
-	@NotNull PetEntity spawn(@NotNull final Location location, @NotNull final PetConfig config);
+	@NotNull PetEntity spawn(@NotNull final PetConfig config, @NotNull final Location origin);
 
 }

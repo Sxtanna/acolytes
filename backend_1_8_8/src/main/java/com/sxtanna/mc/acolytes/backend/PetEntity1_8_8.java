@@ -81,6 +81,13 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 	}
 
 	@Override
+	public void setOnFire(final int i)
+	{
+
+	}
+
+
+	@Override
 	protected void a(final double d0, final boolean flag, final Block block, final BlockPosition blockposition)
 	{
 

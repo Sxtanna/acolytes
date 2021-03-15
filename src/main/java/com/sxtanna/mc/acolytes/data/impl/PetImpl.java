@@ -17,6 +17,7 @@ import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -46,7 +47,19 @@ public final class PetImpl implements Pet
 	public @NotNull Pet copy()
 	{
 		final PetImpl copy = new PetImpl();
-		copy.attributes.putAll(this.attributes);
+
+		for (final Entry<String, Object> entry : this.attributes.entrySet())
+		{
+			//noinspection rawtypes
+			final PetAttribute attr = PetAttributes.ATTRIBUTES.get(entry.getKey());
+			if (attr == null)
+			{
+				continue; // invalid attribute?
+			}
+
+			//noinspection unchecked
+			copy.attributes.put(attr.getName(), attr.getCopiedValue(attr.getType().cast(entry.getValue())));
+		}
 
 		return copy;
 	}

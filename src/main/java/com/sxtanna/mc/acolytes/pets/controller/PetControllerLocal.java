@@ -16,7 +16,6 @@ import com.sxtanna.mc.acolytes.backend.PetConfig;
 import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
-import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -153,31 +152,35 @@ public final class PetControllerLocal implements PetController, Listener
 
 
 	@Override
-	public void give(@NotNull final Player player, @NotNull final Pet pet)
+	public boolean give(@NotNull final Player player, @NotNull final Pet pet)
 	{
 		final Map<String, Pet> pets = this.cached.computeIfAbsent(player.getUniqueId(), ($) -> new HashMap<>());
 		if (pets.containsKey(pet.getUuid()))
 		{
-			return;
+			return false;
 		}
 
 		pets.put(pet.getUuid(), pet.copy());
 
 		save(player, false);
+
+		return true;
 	}
 
 	@Override
-	public void take(@NotNull final Player player, @NotNull final Pet pet)
+	public boolean take(@NotNull final Player player, @NotNull final Pet pet)
 	{
 		final Map<String, Pet> pets = this.cached.get(player.getUniqueId());
 		if (pets == null || pets.isEmpty())
 		{
-			return;
+			return false;
 		}
 
 		pets.remove(pet.getUuid());
 
 		save(player, false);
+
+		return true;
 	}
 
 

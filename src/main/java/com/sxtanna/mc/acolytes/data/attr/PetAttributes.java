@@ -7,9 +7,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.sxtanna.mc.acolytes.data.PetAttribute;
+import com.sxtanna.mc.acolytes.data.cost.Cost;
+import com.sxtanna.mc.acolytes.data.cost.Type;
 import com.sxtanna.mc.acolytes.data.perk.Perk;
+import com.sxtanna.mc.acolytes.file.impl.ObjectCodecCost;
+import com.sxtanna.mc.acolytes.file.impl.ObjectCodecParticles;
 import com.sxtanna.mc.acolytes.file.impl.ObjectCodecPotionEffect;
 
+import xyz.xenondevs.particle.ParticleEffect;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +45,25 @@ public enum PetAttributes
 	public static final PetAttribute<String> SKIN = PetAttribute.builder(String.class, "skin")
 	                                                            .defaultAttr("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTAyOGUzYzZmNDM1MGIzZTQyNGIzNzJmM2M5NDZmNTdiNzgzYjlhYTBlNGUyOTg5MWZmNTc4NDQxZWYwMTMwOCJ9fX0=")
 	                                                            .build();
+
+	public static final PetAttribute<Cost> COST = PetAttribute.builder(Cost.class, "cost")
+	                                                          .defaultAttr(new Cost(Type.VAULT, BigDecimal.valueOf(100.0)))
+	                                                          .reader(ObjectCodecCost.INSTANCE)
+	                                                          .writer(ObjectCodecCost.INSTANCE)
+	                                                          .build();
+
+	public static final PetAttribute<Perk.Particles> PARTICLES = PetAttribute.builder(Perk.Particles.class, "perk_particles")
+	                                                                         .defaultAttr(new Perk.Particles(ParticleEffect.FLAME))
+	                                                                         .copier((perk) -> {
+	                                                                         	return new Perk.Particles(perk.getEffect());
+	                                                                         })
+	                                                                         .writer((yaml, value) -> {
+		                                                                         ObjectCodecParticles.INSTANCE.push(yaml.createSection("perk.perk_particles"), value);
+	                                                                         })
+	                                                                         .reader((yaml) -> {
+		                                                                         return ObjectCodecParticles.INSTANCE.pull(yaml.getConfigurationSection("perk.perk_particles"));
+	                                                                         })
+	                                                                         .build();
 
 
 	public static final PetAttribute<Perk.Effect> PERK_EFFECT = PetAttribute.builder(Perk.Effect.class, "perk_effect")
@@ -97,7 +123,7 @@ public enum PetAttributes
 
 
 	@Unmodifiable
-	public static final Map<String, PetAttribute<?>> ATTRIBUTES = Collections.unmodifiableMap(Stream.of(UUID, NAME, SKIN, PERK_EFFECT, PERK_EFFECT_GROUP)
+	public static final Map<String, PetAttribute<?>> ATTRIBUTES = Collections.unmodifiableMap(Stream.of(UUID, NAME, COST, SKIN, PARTICLES, PERK_EFFECT, PERK_EFFECT_GROUP)
 	                                                                                                .collect(toMap(PetAttribute::getName,
 	                                                                                                               Function.identity())));
 

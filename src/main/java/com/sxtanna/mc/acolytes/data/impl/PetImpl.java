@@ -31,7 +31,9 @@ public final class PetImpl implements Pet
 
 		pet.update(PetAttributes.UUID, "default");
 		pet.update(PetAttributes.NAME, "&3&lKiggy");
+		pet.update(PetAttributes.COST, PetAttributes.COST.getDefaultAttr());
 		pet.update(PetAttributes.SKIN, PetAttributes.SKIN.getDefaultAttr());
+		pet.update(PetAttributes.PARTICLES, PetAttributes.PARTICLES.getDefaultAttr());
 		pet.update(PetAttributes.PERK_EFFECT_GROUP, PetAttributes.PERK_EFFECT_GROUP.getDefaultAttr());
 
 		return pet;

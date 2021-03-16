@@ -35,7 +35,9 @@ public abstract class Perk
 	}
 
 
-	public abstract void apply(@NotNull final Entity target);
+	public abstract void give(@NotNull final Entity target);
+
+	public abstract void take(@NotNull final Entity target);
 
 
 	public static final class Effect extends Perk
@@ -61,7 +63,7 @@ public abstract class Perk
 
 
 		@Override
-		public void apply(@NotNull final Entity target)
+		public void give(@NotNull final Entity target)
 		{
 			if (!(target instanceof LivingEntity))
 			{
@@ -69,6 +71,17 @@ public abstract class Perk
 			}
 
 			((LivingEntity) target).addPotionEffect(getEffect(), true);
+		}
+
+		@Override
+		public void take(@NotNull final Entity target)
+		{
+			if (!(target instanceof LivingEntity))
+			{
+				return;
+			}
+
+			((LivingEntity) target).removePotionEffect(getEffect().getType());
 		}
 
 	}
@@ -101,7 +114,7 @@ public abstract class Perk
 
 
 		@Override
-		public void apply(@NotNull final Entity target)
+		public void give(@NotNull final Entity target)
 		{
 			if (!(target instanceof LivingEntity))
 			{
@@ -109,6 +122,17 @@ public abstract class Perk
 			}
 
 			getEffects().forEach(effect -> ((LivingEntity) target).addPotionEffect(effect, true));
+		}
+
+		@Override
+		public void take(@NotNull final Entity target)
+		{
+			if (!(target instanceof LivingEntity))
+			{
+				return;
+			}
+
+			getEffects().forEach(effect -> ((LivingEntity) target).removePotionEffect(effect.getType()));
 		}
 
 	}
@@ -137,9 +161,15 @@ public abstract class Perk
 
 
 		@Override
-		public void apply(@NotNull final Entity target)
+		public void give(@NotNull final Entity target)
 		{
 			effect.display(target.getLocation());
+		}
+
+		@Override
+		public void take(@NotNull final Entity target)
+		{
+			// nothing
 		}
 
 	}

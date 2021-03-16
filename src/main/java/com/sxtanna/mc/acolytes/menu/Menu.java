@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,16 +22,13 @@ import org.bukkit.inventory.ItemStack;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.base.State;
+import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Spliterator;
-import java.util.Spliterators;
+import com.google.common.collect.Maps;
+
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -514,6 +512,263 @@ public abstract class Menu implements State, Listener, InventoryHolder
 			return list().listIterator();
 		}
 
+	}
+
+
+	@FunctionalInterface
+	public interface MenuCreationFunction
+	{
+
+		void accept(@NotNull final Menu menu, @NotNull final ItemStack item, @NotNull final Consumer<InventoryClickEvent> event);
+
+	}
+
+
+	public static class MenuButton
+	{
+
+		public static @NotNull Builder builder()
+		{
+			return new Builder();
+		}
+
+
+		@Nullable
+		private Material type;
+
+		private int data;
+
+		@Nullable
+		private String name;
+
+		@Nullable
+		private List<String> lore;
+
+
+		public MenuButton()
+		{ }
+
+		public MenuButton(@Nullable final Material type, final int data, @Nullable final String name, @Nullable final List<String> lore)
+		{
+			this.type = type;
+			this.data = data;
+			this.name = name;
+			this.lore = lore;
+		}
+
+		public @Nullable Material getType()
+		{
+			return type;
+		}
+
+		public void setType(@NotNull final Material type)
+		{
+			this.type = type;
+		}
+
+		public int getData()
+		{
+			return data;
+		}
+
+		public void setData(final int data)
+		{
+			this.data = data;
+		}
+
+		public @Nullable String getName()
+		{
+			return name;
+		}
+
+		public void setName(@NotNull final String name)
+		{
+			this.name = name;
+		}
+
+		public @Nullable List<String> getLore()
+		{
+			return lore;
+		}
+
+		public void setLore(@NotNull final List<String> lore)
+		{
+			this.lore = lore;
+		}
+
+
+		public @NotNull ItemStack getItemStack()
+		{
+			if (this.type == null)
+			{
+				return new ItemStack(Material.AIR);
+			}
+
+			return Stacks.item(this.type, 1, this.data, meta ->
+			{
+				if (this.name != null)
+				{
+					Stacks.name(meta, this.name);
+				}
+
+				if (this.lore != null)
+				{
+					Stacks.lore(meta, this.lore);
+				}
+			});
+		}
+
+
+		public static final class Builder
+		{
+
+			@Nullable
+			private Material     type;
+			private int          data;
+			@Nullable
+			private String       name;
+			@Nullable
+			private List<String> lore;
+
+
+			public Builder type(@NotNull final Material type)
+			{
+				this.type = type;
+				return this;
+			}
+
+			public Builder data(final int data)
+			{
+				this.data = data;
+				return this;
+			}
+
+			public Builder name(@NotNull final String name)
+			{
+				this.name = name;
+				return this;
+			}
+
+			public Builder lore(@NotNull final List<String> lore)
+			{
+				this.lore = lore;
+				return this;
+			}
+
+			public Builder lore(@NotNull final String... lore)
+			{
+				return lore(Arrays.asList(lore));
+			}
+
+
+			public @NotNull MenuButton build()
+			{
+				final MenuButton button = new MenuButton();
+
+				button.type = this.type;
+				button.data = this.data;
+				button.name = this.name;
+				button.lore = this.lore;
+
+				return button;
+			}
+
+		}
+
+	}
+
+	public static final class MenuDecoded
+	{
+
+		@NotNull
+		private final Size                                       requiredSize;
+		@NotNull
+		private final Map<Character, List<MenuCreationFunction>> creationData;
+
+
+		private MenuDecoded(@NotNull final Size requiredSize, @NotNull final Map<Character, List<MenuCreationFunction>> creationData)
+		{
+			this.requiredSize = requiredSize;
+			this.creationData = creationData;
+		}
+
+
+		@Contract(pure = true)
+		public @NotNull Size getRequiredSize()
+		{
+			return this.requiredSize;
+		}
+
+		@Contract(pure = true)
+		public @NotNull Map<Character, List<MenuCreationFunction>> getCreationData()
+		{
+			return this.creationData;
+		}
+
+	}
+
+
+	@NotNull
+	private static final Pattern CLEANSE = Pattern.compile("([═╔╦╗╚╩╝╬╣])|^(║ )|( ║)$", Pattern.MULTILINE);
+
+
+	public static @NotNull Optional<MenuDecoded> decode(@NotNull final String encoded)
+	{
+		try
+		{
+			final Map<Character, List<MenuCreationFunction>> create = Maps.newHashMap();
+
+			final String cleaned = CLEANSE.matcher(encoded).replaceAll("").replaceAll(" ", "");
+
+			final Menu.Rows[] rowValues = Menu.Rows.ROWS;
+			final Menu.Cols[] colValues = Menu.Cols.COLS;
+
+			int index = 0;
+
+			int rowIndex = 0;
+			int colIndex = 0;
+
+			while (index < cleaned.length())
+			{
+				if (rowIndex >= rowValues.length)
+				{
+					throw new IllegalArgumentException("too many rows defined for menu");
+				}
+
+				char c = cleaned.charAt(index++);
+
+				switch (c)
+				{
+					case '║':
+						colIndex++;
+						continue;
+					case '╠':
+						rowIndex++;
+						colIndex = 0;
+						continue;
+					case '\n':
+						continue;
+					default:
+						final Cols col = colValues[colIndex];
+						final Rows row = rowValues[rowIndex];
+
+						create.computeIfAbsent(c, ArrayList::new).add((menu, item, event) -> menu.grid(row, col, item, event));
+				}
+			}
+
+			if (rowIndex > Size.values().length)
+			{
+				rowIndex = 0;
+			}
+
+			return Optional.of(new MenuDecoded(Size.values()[rowIndex], create));
+		}
+		catch (final IllegalArgumentException ex)
+		{
+			ex.printStackTrace();
+
+			return Optional.empty();
+		}
 	}
 
 }

@@ -142,6 +142,8 @@ public final class CommandAcolytesAdmin extends BaseCommand
 			return;
 		}
 
+		plugin.getModule().getController().kill(target.getPlayer(), pet);
+
 		plugin.send(sender,
 		            Lang.CMDS__ADMIN__TAKE__SENDER,
 

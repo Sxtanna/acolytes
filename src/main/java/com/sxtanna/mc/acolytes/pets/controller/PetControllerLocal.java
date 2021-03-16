@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -156,16 +155,15 @@ public final class PetControllerLocal implements PetController, Listener
 	@Override
 	public void kill(@NotNull final Player player, @NotNull final Pet pet)
 	{
-		final Pet active = this.active.get(player.getUniqueId());
+		Pet active = this.active.get(player.getUniqueId());
 		if (!active.equals(pet))
 		{
 			return; // not active pet
 		}
 
-		this.active.remove(player.getUniqueId());
+		active = this.active.remove(player.getUniqueId());
 
-
-		final PetEntity entity = pet.setEntity(null);
+		final PetEntity entity = active.setEntity(null);
 		if (entity == null)
 		{
 			return; // not spawned

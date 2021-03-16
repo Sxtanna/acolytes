@@ -2,18 +2,26 @@ package com.sxtanna.mc.acolytes.conf;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 
+import com.sxtanna.mc.acolytes.conf.mapper.MenuButtonMapper;
+import com.sxtanna.mc.acolytes.menu.Menu.MenuButton;
+
+import ch.jalu.configme.Comment;
 import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.SettingsManagerImpl;
 import ch.jalu.configme.configurationdata.ConfigurationDataBuilder;
 import ch.jalu.configme.migration.PlainMigrationService;
+import ch.jalu.configme.properties.MapProperty;
 import ch.jalu.configme.properties.Property;
+import ch.jalu.configme.properties.types.BeanPropertyType;
 import ch.jalu.configme.resource.YamlFileResource;
 
 import java.io.File;
 import java.util.Optional;
 
+import static ch.jalu.configme.properties.PropertyInitializer.mapProperty;
 import static ch.jalu.configme.properties.PropertyInitializer.newProperty;
 
 public final class AcolytesConfig extends SettingsManagerImpl
@@ -72,7 +80,7 @@ public final class AcolytesConfig extends SettingsManagerImpl
 		public static final Property<Boolean> PET_DETAILS_NAME_VISIBLE =
 				newProperty("plugin.pet.details.name.visible", true);
 
-		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK =
+		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK           =
 				newProperty("plugin.pet.details.head-look.enabled", true);
 		public static final Property<Boolean> PET_DETAILS_HEAD_LOOK_AND_PITCH =
 				newProperty("plugin.pet.details.head-look.and-pitch", true);
@@ -117,10 +125,68 @@ public final class AcolytesConfig extends SettingsManagerImpl
 	public static final class Menus implements SettingsHolder
 	{
 
-		public static final Property<Integer> PETS_MENU_ROW_COUNT =
-				newProperty("menus.pets.row-count", 6);
-		public static final Property<String>  PETS_MENU_INV_TITLE =
-				newProperty("menus.pets.inv-title", "&3&lPets");
+		public static final Property<String> PETS_MENU_TITLE =
+				newProperty("menus.pets.title", "&3&lPets");
+
+
+		public static final Property<String> PETS_MENU_LAYOUT =
+				newProperty("menus.pets.layout", "╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗\n" +
+				                                 "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                 "╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
+
+		@Comment("'P' is used as the placeholder for pet items, do not remove it.")
+		public static final MapProperty<MenuButton> PETS_MENU_VALUES =
+				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
+						.path("menus.pets.values")
+						.defaultEntry("P", MenuButton.builder()
+						                             .type(Material.INK_SACK)
+						                             .data(8)
+						                             .name(" ")
+						                             .build())
+						.defaultEntry("F", MenuButton.builder()
+						                             .type(Material.STAINED_GLASS_PANE)
+						                             .data(15)
+						                             .name(" ")
+						                             .build())
+						.build();
+
+
+		public static final Property<String> OPTS_MENU_TITLE =
+				newProperty("menus.opts.title", "&3&lPet Options");
+
+
+		public static final Property<String> OPTS_MENU_LAYOUT =
+				newProperty("menus.opts.layout", "╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗\n" +
+				                                 "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ F ║ F ║ F ║ P ║ F ║ F ║ F ║ F ║\n" +
+				                                 "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                 "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                 "╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
+
+		public static final MapProperty<MenuButton> OPTS_MENU_VALUES =
+				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
+						.path("menus.opts.values")
+						.defaultEntry("P", MenuButton.builder()
+						                             .type(Material.PAINTING)
+						                             .name("&6&lParticle Effects")
+						                             .lore("",
+						                                   "  &7Click to modify the pet's particle effects!")
+						                             .build())
+						.defaultEntry("F", MenuButton.builder()
+						                             .type(Material.STAINED_GLASS_PANE)
+						                             .data(15)
+						                             .name(" ")
+						                             .build())
+						.build();
 
 	}
 

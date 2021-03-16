@@ -26,6 +26,7 @@ import com.sxtanna.mc.acolytes.backend.PetConfig;
 import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.menu.impl.MenuOpts;
 
 import java.util.Collection;
@@ -364,7 +365,9 @@ public final class PetControllerLocal implements PetController, Listener
 
 		event.setCancelled(true);
 
-		new MenuOpts(plugin, ((Pet) meta.get(0).value()), player).open(player);
+		Menu.decode(plugin.getConfiguration().get(AcolytesConfig.Menus.OPTS_MENU_LAYOUT)).ifPresent(decode -> {
+			new MenuOpts(plugin, ((Pet) meta.get(0).value()), player, decode).open(player);
+		});
 	}
 
 }

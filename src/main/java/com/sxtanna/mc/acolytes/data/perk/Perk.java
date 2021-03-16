@@ -9,6 +9,8 @@ import org.bukkit.potion.PotionEffect;
 
 import com.sxtanna.mc.acolytes.util.bukkit.Format;
 
+import xyz.xenondevs.particle.ParticleEffect;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -107,6 +109,37 @@ public abstract class Perk
 			}
 
 			getEffects().forEach(effect -> ((LivingEntity) target).addPotionEffect(effect, true));
+		}
+
+	}
+
+
+	public static final class Particles extends Perk
+	{
+
+		@NotNull
+		private final ParticleEffect effect;
+
+
+		public Particles(@NotNull final ParticleEffect effect)
+		{
+			super(effect.name());
+
+			this.effect = effect;
+		}
+
+
+		@Contract(pure = true)
+		public @NotNull ParticleEffect getEffect()
+		{
+			return effect;
+		}
+
+
+		@Override
+		public void apply(@NotNull final Entity target)
+		{
+			effect.display(target.getLocation());
 		}
 
 	}

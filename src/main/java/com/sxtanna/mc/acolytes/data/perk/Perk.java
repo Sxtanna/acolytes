@@ -3,6 +3,7 @@ package com.sxtanna.mc.acolytes.data.perk;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 
@@ -32,7 +33,7 @@ public abstract class Perk
 	}
 
 
-	public abstract void apply(@NotNull final LivingEntity target);
+	public abstract void apply(@NotNull final Entity target);
 
 
 	public static final class Effect extends Perk
@@ -58,9 +59,14 @@ public abstract class Perk
 
 
 		@Override
-		public void apply(@NotNull final LivingEntity target)
+		public void apply(@NotNull final Entity target)
 		{
-			target.addPotionEffect(getEffect(), true);
+			if (!(target instanceof LivingEntity))
+			{
+				return;
+			}
+
+			((LivingEntity) target).addPotionEffect(getEffect(), true);
 		}
 
 	}
@@ -93,9 +99,14 @@ public abstract class Perk
 
 
 		@Override
-		public void apply(@NotNull final LivingEntity target)
+		public void apply(@NotNull final Entity target)
 		{
-			getEffects().forEach(effect -> target.addPotionEffect(effect, true));
+			if (!(target instanceof LivingEntity))
+			{
+				return;
+			}
+
+			getEffects().forEach(effect -> ((LivingEntity) target).addPotionEffect(effect, true));
 		}
 
 	}

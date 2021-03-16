@@ -15,7 +15,7 @@ import com.sxtanna.mc.acolytes.data.PetAttribute;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public final class PetImpl implements Pet
 
 
 	@NotNull
-	private final Map<String, Object>        attributes = new HashMap<>();
+	private final Map<String, Object>        attributes = new LinkedHashMap<>();
 	@NotNull
 	private final AtomicReference<PetEntity> liveEntity = new AtomicReference<>();
 

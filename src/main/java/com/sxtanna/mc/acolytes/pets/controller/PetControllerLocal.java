@@ -19,12 +19,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.backend.PetConfig;
 import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.menu.impl.MenuOpts;
 
@@ -150,6 +152,35 @@ public final class PetControllerLocal implements PetController, Listener
 		entity.getBukkitEntity().setMetadata("acolytes_pet", new FixedMetadataValue(plugin, pet));
 
 		this.active.put(player.getUniqueId(), pet);
+
+		pet.select(PetAttributes.PERK_EFFECT).ifPresent(effect -> {
+			effect.give(player);
+		});
+
+		pet.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(effect -> {
+			effect.give(player);
+		});
+
+
+		pet.select(PetAttributes.PARTICLES).ifPresent(particles -> {
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					final Entity live = entity.getBukkitEntity();
+
+					if (live.isDead())
+					{
+						cancel();
+						return;
+					}
+
+					particles.give(live);
+				}
+
+			}.runTaskTimer(this.plugin, 0L, 1L);
+		});
 	}
 
 	@Override
@@ -171,6 +202,14 @@ public final class PetControllerLocal implements PetController, Listener
 
 		entity.setTargetEntity(null);
 		entity.getBukkitEntity().remove();
+
+		active.select(PetAttributes.PERK_EFFECT).ifPresent(effect -> {
+			effect.take(player);
+		});
+
+		active.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(effect -> {
+			effect.take(player);
+		});
 	}
 
 

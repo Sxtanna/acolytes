@@ -48,10 +48,10 @@ public enum PetAttributes
 	                                                                                                                           perk.getEffect().isAmbient(),
 	                                                                                                                           perk.getEffect().hasParticles())))
 	                                                                        .writer((yaml, value) -> {
-		                                                                        ObjectCodecPotionEffect.INSTANCE.push(yaml.createSection("perk_effect"), value.getEffect());
+		                                                                        ObjectCodecPotionEffect.INSTANCE.push(yaml.createSection("perk.perk_effect"), value.getEffect());
 	                                                                        })
 	                                                                        .reader(yaml -> {
-		                                                                        return new Perk.Effect(ObjectCodecPotionEffect.INSTANCE.pull(yaml.getConfigurationSection("perk_effect")));
+		                                                                        return new Perk.Effect(ObjectCodecPotionEffect.INSTANCE.pull(yaml.getConfigurationSection("perk.perk_effect")));
 	                                                                        })
 	                                                                        .build();
 
@@ -73,7 +73,7 @@ public enum PetAttributes
 		                                                                                   return new Perk.EffectGroup(effects);
 	                                                                                   })
 	                                                                                   .writer((yaml, value) -> {
-		                                                                                   final ConfigurationSection section = yaml.createSection("perk_effect_group");
+		                                                                                   final ConfigurationSection section = yaml.createSection("perk.perk_effect_group");
 
 		                                                                                   for (int i = 0; i < value.getEffects().size(); i++)
 		                                                                                   {
@@ -82,7 +82,7 @@ public enum PetAttributes
 	                                                                                   })
 	                                                                                   .reader(yaml -> {
 
-		                                                                                   final ConfigurationSection section = yaml.getConfigurationSection("perk_effect_group");
+		                                                                                   final ConfigurationSection section = yaml.getConfigurationSection("perk.perk_effect_group");
 
 		                                                                                   final List<PotionEffect> effects = new ArrayList<>();
 

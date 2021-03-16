@@ -73,6 +73,8 @@ public final class PetControllerLocal implements PetController, Listener
 			else if (pass != null && !pass.isEmpty())
 			{
 				this.loaded.putAll(pass.stream().collect(toMap(Pet::getUuid, Function.identity())));
+
+				this.plugin.getLogger().info(String.format("loaded %d pet(s)!", this.loaded.size()));
 			}
 		});
 

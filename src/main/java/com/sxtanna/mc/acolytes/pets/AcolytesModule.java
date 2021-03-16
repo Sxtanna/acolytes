@@ -45,14 +45,17 @@ public final class AcolytesModule implements State
 	@Override
 	public void load()
 	{
-		switch (plugin.getServer().getClass().getPackage().getName().split("\\.")[3])
+		final String version = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
+		switch (version)
 		{
 			case "v1_8_R3":
 				this.adapter.set(new PlayerSkinAdapter1_8_8());
 				this.provider.set(new PetEntityProvider1_8_8());
+
+				this.plugin.getLogger().info(String.format("acolytes using adapter and provider for version %s", version));
 				break;
 			default:
-				throw new IllegalStateException("could not find pet entity provider for server version");
+				throw new IllegalStateException(String.format("could not find pet entity provider for server version %s", version));
 		}
 
 

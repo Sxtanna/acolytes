@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 
 import com.sxtanna.mc.acolytes.conf.mapper.MenuButtonMapper;
+import com.sxtanna.mc.acolytes.data.sort.PetSort;
 import com.sxtanna.mc.acolytes.menu.Menu.MenuButton;
 
 import ch.jalu.configme.Comment;
@@ -125,8 +126,10 @@ public final class AcolytesConfig extends SettingsManagerImpl
 	public static final class Menus implements SettingsHolder
 	{
 
-		public static final Property<String> PETS_MENU_TITLE =
+		public static final Property<String>  PETS_MENU_TITLE  =
 				newProperty("menus.pets.title", "&3&lPets");
+		public static final Property<PetSort> PETS_MENU_SORTER =
+				newProperty(PetSort.class, "menus.pets.sorter", PetSort.COST);
 
 
 		public static final Property<String> PETS_MENU_LAYOUT =

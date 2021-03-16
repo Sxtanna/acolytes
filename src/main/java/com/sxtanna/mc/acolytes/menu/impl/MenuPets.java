@@ -65,7 +65,10 @@ public final class MenuPets extends Menu
 		}
 
 
-		final Iterator<Entry<String, Pet>> pets = plugin.getModule().getController().getLoadedPets().entrySet().iterator();
+		final List<Pet> entries = new ArrayList<>(plugin.getModule().getController().getLoadedPets().values());
+		entries.sort(plugin.getConfiguration().get(AcolytesConfig.Menus.PETS_MENU_SORTER));
+
+		final Iterator<Pet> pets = entries.iterator();
 
 		for (final Entry<String, MenuButton> button : buttons.entrySet())
 		{
@@ -83,7 +86,7 @@ public final class MenuPets extends Menu
 					continue;
 				}
 
-				final Pet loaded = pets.next().getValue();
+				final Pet loaded = pets.next();
 				final Pet target = plugin.getModule().getController().getByUuid(player, loaded.getUuid()).orElse(null);
 
 				final ItemStack item = Stacks.meta(loaded.createHeadItem(plugin.getModule().getAdapter()), meta ->

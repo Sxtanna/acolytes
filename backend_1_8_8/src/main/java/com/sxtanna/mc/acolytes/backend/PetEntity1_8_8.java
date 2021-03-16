@@ -35,6 +35,13 @@ public final class PetEntity1_8_8 extends EntityArmorStand implements PetEntity
 	private final List<PetEntityGoal> goals = new ArrayList<>();
 
 
+	public PetEntity1_8_8(final net.minecraft.server.v1_8_R3.World world)
+	{
+		super(world);
+
+		this.dead = true; // insta kill >:)
+	}
+
 	PetEntity1_8_8(@NotNull final World world, @NotNull final PetConfig config)
 	{
 		super(((CraftWorld) world).getHandle());

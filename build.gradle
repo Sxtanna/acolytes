@@ -49,6 +49,13 @@ repositories {
     maven {
         url = uri("https://repo.aikar.co/content/groups/aikar/")
     }
+    
+    maven {
+        url = uri("https://repo.mvdw-software.com/repository/public/")
+    }
+    maven {
+        url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    }
 }
 
 dependencies {
@@ -61,6 +68,13 @@ dependencies {
     }
     compileOnly("com.github.Realizedd:TokenManager:3.2.4") {
         transitive = false
+    }
+    
+    compileOnly("me.clip:placeholderapi:2.10.9") {
+        transitive false
+    }
+    compileOnly("be.maximvdw:MVdWPlaceholderAPI:3.1.1-SNAPSHOT") {
+        transitive false
     }
     
     implementation project(":backend")

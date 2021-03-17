@@ -163,7 +163,9 @@ public abstract class Perk
 		@Override
 		public void give(@NotNull final Entity target)
 		{
-			effect.display(target.getLocation());
+			effect.display(!(target instanceof LivingEntity) ?
+			               target.getLocation() :
+			               ((LivingEntity) target).getEyeLocation().subtract(0.0, 0.4, 0.0));
 		}
 
 		@Override

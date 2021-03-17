@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.sxtanna.mc.acolytes.base.State;
 import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.hook.Economy;
 
 import java.util.Map;
 import java.util.Optional;
@@ -57,5 +58,8 @@ public interface PetController extends State
 	boolean give(@NotNull final Player player, @NotNull final Pet pet);
 
 	boolean take(@NotNull final Player player, @NotNull final Pet pet);
+
+
+	@NotNull Economy.Response purchase(@NotNull final Player player, @NotNull final Pet pet);
 
 }

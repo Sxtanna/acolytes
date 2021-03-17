@@ -27,6 +27,9 @@ import com.sxtanna.mc.acolytes.backend.PetEntity;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
+import com.sxtanna.mc.acolytes.data.cost.Cost;
+import com.sxtanna.mc.acolytes.hook.Economy;
+import com.sxtanna.mc.acolytes.hook.Manager;
 import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.menu.impl.MenuOpts;
 
@@ -245,6 +248,37 @@ public final class PetControllerLocal implements PetController, Listener
 		return true;
 	}
 
+	@Override
+	public @NotNull Economy.Response purchase(@NotNull final Player player, @NotNull final Pet pet)
+	{
+		final Optional<Cost> cost = pet.select(PetAttributes.COST);
+		if (!cost.isPresent())
+		{
+			return Economy.Response.passing();
+		}
+
+		switch (cost.get().getType())
+		{
+			case VAULT:
+				return Economy.take(player, cost.get().getCost().abs());
+			case TOKEN:
+				return Manager.take(player, cost.get().getCost().abs());
+			case LEVEL:
+				final int level = player.getLevel();
+				final int costs = cost.get().getCost().abs().intValueExact();
+
+				if ((level - costs) < 0)
+				{
+					return Economy.Response.failing("not enough levels");
+				}
+
+				player.setLevel(level - costs);
+
+				return Economy.Response.passing();
+		}
+
+		return Economy.Response.failing("invalid pet cost");
+	}
 
 	private void load(@NotNull final Player player)
 	{

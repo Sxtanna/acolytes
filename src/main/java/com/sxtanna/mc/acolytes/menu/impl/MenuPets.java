@@ -11,6 +11,7 @@ import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.menu.Menu;
+import com.sxtanna.mc.acolytes.pets.controller.PetController;
 import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
 import java.util.ArrayList;
@@ -133,6 +134,17 @@ public final class MenuPets extends Menu
 				function.accept(this, item, event -> {
 					if (target == null)
 					{
+						final PetController controller = plugin.getModule().getController();
+
+						controller.purchase(player, loaded)
+						          .handle(() ->
+						                  {
+							                  controller.give(player, loaded);
+						                  },
+						                  reason ->
+						                  {
+						                  	player.sendMessage("lol fail: " + reason);
+						                  });
 						return;
 					}
 

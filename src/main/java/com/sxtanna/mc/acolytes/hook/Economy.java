@@ -200,7 +200,7 @@ public final class Economy
         catch (final NoClassDefFoundError error)
         {
             // return a failing response with the NCDFE message (probably not ideal? maybe just say "no vault")
-            return Response.failing(String.format("withdraw failed: %s", error.getMessage()));
+            return Economy.Response.failing("no economy");
         }
     }
 
@@ -232,7 +232,7 @@ public final class Economy
         catch (final NoClassDefFoundError error)
         {
             // return a failing response with the NCDFE message (probably not ideal? maybe just say "no vault")
-            return Response.failing(String.format("deposit failed: %s", error.getMessage()));
+            return Economy.Response.failing("no economy");
         }
     }
 

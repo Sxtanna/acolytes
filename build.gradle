@@ -59,6 +59,9 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         transitive false // ignore transitive dependencies (we don't need them)
     }
+    compileOnly("com.github.Realizedd:TokenManager:3.2.4") {
+        transitive = false
+    }
     
     implementation project(":backend")
     implementation project(":backend_1_8_8")

@@ -50,14 +50,32 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	{
 		plugin.getModule().getController().getActive(target.getPlayer()).ifPresent(active -> {
 			plugin.getModule().getController().kill(target.getPlayer(), active);
-
-			// todo: send message "active pet disabled"
-
 		});
 
 		plugin.getModule().getController().load(target.getPlayer(), pet);
 
-		// todo: send message "target pet enabled"
+		plugin.send(sender,
+		            Lang.CMDS__ADMIN__ENABLE__SENDER,
+
+		            "{target}",
+		            target.getPlayer().getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+		if (sender.equals(target.getPlayer()))
+		{
+			return;
+		}
+
+		plugin.send(target.getPlayer(),
+		            Lang.CMDS__ADMIN__ENABLE__TARGET,
+
+		            "{sender}",
+		            sender.getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
 	}
 
 
@@ -68,7 +86,28 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	{
 		plugin.getModule().getController().kill(target.getPlayer(), pet);
 
-		// todo: send message "active pet disabled"
+		plugin.send(sender,
+		            Lang.CMDS__ADMIN__DISABLE__SENDER,
+
+		            "{target}",
+		            target.getPlayer().getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
+
+		if (sender.equals(target.getPlayer()))
+		{
+			return;
+		}
+
+		plugin.send(target.getPlayer(),
+		            Lang.CMDS__ADMIN__DISABLE__TARGET,
+
+		            "{sender}",
+		            sender.getName(),
+
+		            "{pet_name}",
+		            pet.select(PetAttributes.NAME).orElse(pet.select(PetAttributes.UUID).orElse("Pet")));
 	}
 
 

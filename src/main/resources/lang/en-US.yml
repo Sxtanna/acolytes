@@ -14,6 +14,12 @@ cmds:
       sender: "&7Pet name has been updated from&r {old_name}&r &7to&r {new_name}&r"
       target: "&7Your pet's name has been updated from&r {old_name}&r &7to&r {new_name}&r"
     reload: "&7Plugin Configuration reloaded!"
+    enable:
+      sender: "&7You have summoned&r {pet_name}&r &7for&r {target}&r"
+      target: "{pet_name}&r &7was summoned to you by&r {sender}&r"
+    disable:
+      sender: "&7You have sent&r {pet_name}&r &7away for&r {target}&r"
+      target: "{pet_name}&r &7was sent away by&r {sender}&r"
 
 menu:
   spawned: "&7You have summoned&r {pet_name}&r"

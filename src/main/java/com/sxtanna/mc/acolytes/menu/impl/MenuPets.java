@@ -9,6 +9,7 @@ import com.sxtanna.mc.acolytes.AcolytesPlugin;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
+import com.sxtanna.mc.acolytes.data.cost.Cost;
 import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.pets.controller.PetController;
@@ -140,10 +141,28 @@ public final class MenuPets extends Menu
 						          .handle(() ->
 						                  {
 							                  controller.give(player, loaded);
+
+							                  plugin.send(player, Lang.MENU__PURCHASE_SUCCESS,
+
+							                              "{pet_name}",
+							                              loaded.select(PetAttributes.NAME).orElse(loaded.select(PetAttributes.UUID).orElse("Pet")),
+
+							                              "{cost}",
+							                              loaded.select(PetAttributes.COST).orElse(Cost.FREE).toStringFormatted(player));
+
 						                  },
 						                  reason ->
 						                  {
-						                  	player.sendMessage("lol fail: " + reason);
+							                  plugin.send(player, Lang.MENU__PURCHASE_FAILURE,
+
+							                              "{pet_name}",
+							                              loaded.select(PetAttributes.NAME).orElse(loaded.select(PetAttributes.UUID).orElse("Pet")),
+
+							                              "{cost}",
+							                              loaded.select(PetAttributes.COST).orElse(Cost.FREE).toStringFormatted(player),
+
+							                              "{reason}",
+							                              reason);
 						                  });
 						return;
 					}

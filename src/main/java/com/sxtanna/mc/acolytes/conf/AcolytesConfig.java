@@ -34,7 +34,6 @@ public final class AcolytesConfig extends SettingsManagerImpl
 
 		      ConfigurationDataBuilder.createConfiguration(Basic.class,
 		                                                   Menus.class,
-		                                                   Costs.class,
 		                                                   Perks.class),
 
 		      new PlainMigrationService());
@@ -190,12 +189,6 @@ public final class AcolytesConfig extends SettingsManagerImpl
 						                             .name(" ")
 						                             .build())
 						.build();
-
-	}
-
-
-	public static final class Costs implements SettingsHolder
-	{
 
 	}
 

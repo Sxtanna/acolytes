@@ -139,6 +139,8 @@ public final class MenuPets extends Menu
 							                              "{reason}",
 							                              reason);
 						                  });
+
+						redo();
 						return;
 					}
 

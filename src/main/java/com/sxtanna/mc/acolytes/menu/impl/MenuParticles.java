@@ -62,7 +62,7 @@ public final class MenuParticles extends Menu
 			return;
 		}
 
-		final Map<String, MenuButton> buttons = plugin.getConfiguration().get(AcolytesConfig.Menus.OPTS_MENU_VALUES);
+		final Map<String, MenuButton> buttons = plugin.getConfiguration().get(AcolytesConfig.Menus.PARTICLES_MENU_VALUES);
 		if (buttons.isEmpty())
 		{
 			return;

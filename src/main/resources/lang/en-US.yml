@@ -22,3 +22,13 @@ menu:
     not-given: "  &7Locked"
     summon: " \n&7Click to Summon!"
     remove: " \n&7Click to Send Away!"
+
+cost:
+  prefix:
+    vault: "$"
+    level: ""
+    token: ""
+  suffix:
+    vault: ""
+    level: "Levels"
+    token: "Tokens"

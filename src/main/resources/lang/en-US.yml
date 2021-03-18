@@ -17,6 +17,9 @@ cmds:
 menu:
   spawned: "&7You have summoned&r {pet_name}&r"
   removed: "{pet_name}&r &7was sent away!"
+  purchase:
+    success: "&7Successfully purchased&r {pet_name}&r &7for&r {cost}&r"
+    failure: "&7Failed to purchase&r {pet_name}&r&7: &c{reason}&r"
   buttons:
     has-given: "  &aUnlocked"
     not-given: "  &7Locked"

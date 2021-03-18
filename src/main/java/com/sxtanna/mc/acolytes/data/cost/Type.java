@@ -8,9 +8,9 @@ import com.sxtanna.mc.acolytes.lang.Lang;
 public enum Type
 {
 
-	VAULT(Lang.COST__VAULT__PREFIX, Lang.COST__VAULT__SUFFIX),
-	LEVEL(Lang.COST__LEVEL__PREFIX, Lang.COST__LEVEL__SUFFIX),
-	TOKEN(Lang.COST__TOKEN__PREFIX, Lang.COST__TOKEN__SUFFIX);
+	VAULT(Lang.COST__PREFIX__VAULT, Lang.COST__SUFFIX__VAULT),
+	LEVEL(Lang.COST__PREFIX__LEVEL, Lang.COST__SUFFIX__LEVEL),
+	TOKEN(Lang.COST__PREFIX__TOKEN, Lang.COST__SUFFIX__TOKEN);
 
 
 	@NotNull

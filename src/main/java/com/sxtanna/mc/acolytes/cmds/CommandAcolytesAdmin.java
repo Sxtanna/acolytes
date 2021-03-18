@@ -211,4 +211,12 @@ public final class CommandAcolytesAdmin extends BaseCommand
 		            oldName != null ? oldName : "");
 	}
 
+
+	@Subcommand("reload")
+	@CommandPermission("pets.admin.reload")
+	public void reload(@NotNull final CommandSender sender)
+	{
+		plugin.getConfiguration().reload();
+	}
+
 }

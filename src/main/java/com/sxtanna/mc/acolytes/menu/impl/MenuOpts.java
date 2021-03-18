@@ -17,6 +17,8 @@ import static com.sxtanna.mc.acolytes.util.bukkit.Colors.colorize;
 public final class MenuOpts extends Menu
 {
 
+	public static final String PARTICLES_KEY = "P";
+
 	@NotNull
 	private final Pet            pet;
 	@NotNull
@@ -65,7 +67,14 @@ public final class MenuOpts extends Menu
 			for (final MenuCreationFunction function : functions)
 			{
 				function.accept(this, button.getValue().getItemStack(), event -> {
+					if (!button.getKey().equals(PARTICLES_KEY))
+					{
+						return;
+					}
 
+					Menu.decode(plugin.getConfiguration().get(AcolytesConfig.Menus.PARTICLES_MENU_LAYOUT)).ifPresent(decode -> {
+						new MenuParticles(plugin, pet, player, decode).open(player);
+					});
 				});
 			}
 		}

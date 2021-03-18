@@ -18,6 +18,7 @@ import ch.jalu.configme.properties.MapProperty;
 import ch.jalu.configme.properties.Property;
 import ch.jalu.configme.properties.types.BeanPropertyType;
 import ch.jalu.configme.resource.YamlFileResource;
+import xyz.xenondevs.particle.ParticleEffect;
 
 import java.io.File;
 import java.util.Optional;
@@ -194,10 +195,62 @@ public final class AcolytesConfig extends SettingsManagerImpl
 						                        .build())
 						.build();
 
+
+		public static final Property<String> PARTICLES_MENU_TITLE =
+				newProperty("menus.particles.title", "&3&lPet Options");
+
+
+		public static final Property<String> PARTICLES_MENU_LAYOUT =
+				newProperty("menus.particles.layout", "╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗\n" +
+				                                      "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
+				                                      "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                      "╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
+
+		public static final MapProperty<MenuButton> PARTICLES_MENU_VALUES =
+				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
+						.path("menus.particles.values")
+						.defaultEntry("P",
+						              MenuButton.builder()
+						                        .type(Material.INK_SACK)
+						                        .name("This is a placeholder, refer to `perks.particle-effects.icons`")
+						                        .build())
+						.defaultEntry("F",
+						              MenuButton.builder()
+						                        .type(Material.STAINED_GLASS_PANE)
+						                        .data(15)
+						                        .name(" ")
+						                        .build())
+						.build();
+
 	}
 
 	public static final class Perks implements SettingsHolder
 	{
+
+		public static final MapProperty<MenuButton> PARTICLE_EFFECT_ICONS =
+				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
+						.path("perks.particle-effects.icons")
+						.defaultEntry("DEFAULT",
+						              MenuButton.builder()
+						                        .type(Material.INK_SACK)
+						                        .data(8)
+						                        .name("&9{effect_name}")
+						                        .build())
+						.defaultEntry(ParticleEffect.FLAME.name(),
+						              MenuButton.builder()
+						                        .type(Material.BLAZE_POWDER)
+						                        .name("&c&lFlame")
+						                        .build())
+						.build();
 
 	}
 

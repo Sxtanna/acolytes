@@ -142,7 +142,7 @@ public final class MenuPets extends Menu
 						                  {
 							                  controller.give(player, loaded);
 
-							                  plugin.send(player, Lang.MENU__PURCHASE_SUCCESS,
+							                  plugin.send(player, Lang.MENU__PURCHASE__SUCCESS,
 
 							                              "{pet_name}",
 							                              loaded.select(PetAttributes.NAME).orElse(loaded.select(PetAttributes.UUID).orElse("Pet")),
@@ -153,7 +153,7 @@ public final class MenuPets extends Menu
 						                  },
 						                  reason ->
 						                  {
-							                  plugin.send(player, Lang.MENU__PURCHASE_FAILURE,
+							                  plugin.send(player, Lang.MENU__PURCHASE__FAILURE,
 
 							                              "{pet_name}",
 							                              loaded.select(PetAttributes.NAME).orElse(loaded.select(PetAttributes.UUID).orElse("Pet")),

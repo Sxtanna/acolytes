@@ -11,6 +11,10 @@ public final class Cost implements Comparable<Cost>
 {
 
 	@NotNull
+	public static final Cost FREE = new Cost(Type.VAULT, BigDecimal.ZERO);
+
+
+	@NotNull
 	public static final Comparator<Cost> COMPARE_BY_TYPE = Comparator.comparing(Cost::getType);
 	@NotNull
 	public static final Comparator<Cost> COMPARE_BY_COST = Comparator.comparing(Cost::getCost);

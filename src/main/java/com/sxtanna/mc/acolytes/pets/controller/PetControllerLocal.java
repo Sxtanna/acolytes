@@ -190,7 +190,7 @@ public final class PetControllerLocal implements PetController, Listener
 	public void kill(@NotNull final Player player, @NotNull final Pet pet)
 	{
 		Pet active = this.active.get(player.getUniqueId());
-		if (!active.equals(pet))
+		if (!pet.equals(active))
 		{
 			return; // not active pet
 		}

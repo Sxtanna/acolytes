@@ -34,9 +34,9 @@ menu:
 cost:
   prefix:
     vault: "$"
-    level: ""
-    token: ""
+    level: " "
+    token: " "
   suffix:
-    vault: ""
-    level: "Levels"
-    token: "Tokens"
+    vault: " "
+    level: " Levels"
+    token: " Tokens"

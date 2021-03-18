@@ -3,6 +3,10 @@ package com.sxtanna.mc.acolytes.data.cost;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import org.bukkit.entity.Player;
+
+import com.sxtanna.mc.acolytes.AcolytesPlugin;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Objects;
@@ -86,6 +90,15 @@ public final class Cost implements Comparable<Cost>
 		return String.format("Cost[%s %s]",
 		                     this.getCost(),
 		                     this.getType());
+	}
+
+
+	public @NotNull String toStringFormatted(@NotNull final Player player)
+	{
+		return String.format("%s%s%s",
+		                     AcolytesPlugin.get().lang(player, getType().getPrefix()),
+		                     getCost().toPlainString(),
+		                     AcolytesPlugin.get().lang(player, getType().getSuffix()));
 	}
 
 }

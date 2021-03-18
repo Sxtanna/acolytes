@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import com.sxtanna.mc.acolytes.AcolytesPlugin;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -50,6 +52,12 @@ public final class Replace implements BiFunction<@Nullable OfflinePlayer, @NotNu
             // attempt to register mvdwplaceholderapi
             instance.attemptToRegister(MVDW_PLUGIN_NAME,
                                        () -> be.maximvdw.placeholderapi.PlaceholderAPI::replacePlaceholders);
+
+
+            if (Bukkit.getPluginManager().isPluginEnabled(PAPI_PLUGIN_NAME))
+            {
+                new com.sxtanna.mc.acolytes.hook.papi.ClipPlaceholders(AcolytesPlugin.get()).register();
+            }
         }
 
         // return cached instance

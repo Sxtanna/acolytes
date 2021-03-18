@@ -12,6 +12,7 @@ import com.sxtanna.mc.acolytes.cmds.CommandAcolytes;
 import com.sxtanna.mc.acolytes.cmds.CommandAcolytesAdmin;
 import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
+import com.sxtanna.mc.acolytes.hook.Replace;
 import com.sxtanna.mc.acolytes.pets.AcolytesModule;
 import com.sxtanna.mc.acolytes.util.bukkit.Colors;
 import com.sxtanna.mc.acolytes.util.OnlinePlayerResolver;
@@ -76,6 +77,9 @@ public final class AcolytesPlugin extends JavaPlugin
 		saveDefaultLanguageFiles();
 		initializeCommandManager();
 		loadStorageLanguageFiles();
+
+		// initialize
+		Replace.get();
 	}
 
 	@Override

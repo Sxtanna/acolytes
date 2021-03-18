@@ -165,12 +165,12 @@ public final class PetControllerLocal implements PetController, Listener
 		});
 
 
-		pet.select(PetAttributes.PARTICLES).ifPresent(particles -> {
-			new BukkitRunnable()
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
 			{
-				@Override
-				public void run()
-				{
+				pet.select(PetAttributes.PARTICLES).ifPresent(particles -> {
 					final Entity live = entity.getBukkitEntity();
 
 					if (live.isDead())
@@ -180,10 +180,12 @@ public final class PetControllerLocal implements PetController, Listener
 					}
 
 					particles.give(live);
-				}
+				});
+			}
 
-			}.runTaskTimer(this.plugin, 0L, 1L);
-		});
+		}.runTaskTimer(this.plugin, 0L, 1L);
+
+
 	}
 
 	@Override

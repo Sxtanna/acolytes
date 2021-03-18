@@ -148,16 +148,18 @@ public final class AcolytesConfig extends SettingsManagerImpl
 		public static final MapProperty<MenuButton> PETS_MENU_VALUES =
 				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
 						.path("menus.pets.values")
-						.defaultEntry("P", MenuButton.builder()
-						                             .type(Material.INK_SACK)
-						                             .data(8)
-						                             .name(" ")
-						                             .build())
-						.defaultEntry("F", MenuButton.builder()
-						                             .type(Material.STAINED_GLASS_PANE)
-						                             .data(15)
-						                             .name(" ")
-						                             .build())
+						.defaultEntry("P",
+						              MenuButton.builder()
+						                        .type(Material.INK_SACK)
+						                        .data(8)
+						                        .name(" ")
+						                        .build())
+						.defaultEntry("F",
+						              MenuButton.builder()
+						                        .type(Material.STAINED_GLASS_PANE)
+						                        .data(15)
+						                        .name(" ")
+						                        .build())
 						.build();
 
 
@@ -177,17 +179,19 @@ public final class AcolytesConfig extends SettingsManagerImpl
 		public static final MapProperty<MenuButton> OPTS_MENU_VALUES =
 				mapProperty(BeanPropertyType.of(MenuButton.class, new MenuButtonMapper()))
 						.path("menus.opts.values")
-						.defaultEntry("P", MenuButton.builder()
-						                             .type(Material.PAINTING)
-						                             .name("&6&lParticle Effects")
-						                             .lore("",
-						                                   "  &7Click to modify the pet's particle effects!")
-						                             .build())
-						.defaultEntry("F", MenuButton.builder()
-						                             .type(Material.STAINED_GLASS_PANE)
-						                             .data(15)
-						                             .name(" ")
-						                             .build())
+						.defaultEntry("P",
+						              MenuButton.builder()
+						                        .type(Material.PAINTING)
+						                        .name("&6&lParticle Effects")
+						                        .lore("",
+						                              "  &7Click to modify the pet's particle effects!")
+						                        .build())
+						.defaultEntry("F",
+						              MenuButton.builder()
+						                        .type(Material.STAINED_GLASS_PANE)
+						                        .data(15)
+						                        .name(" ")
+						                        .build())
 						.build();
 
 	}

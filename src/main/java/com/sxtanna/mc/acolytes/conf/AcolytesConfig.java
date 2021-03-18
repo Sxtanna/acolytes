@@ -204,15 +204,15 @@ public final class AcolytesConfig extends SettingsManagerImpl
 				newProperty("menus.particles.layout", "╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗\n" +
 				                                      "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
 				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
-				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║\n" +
 				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
-				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║\n" +
 				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
-				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║\n" +
 				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
-				                                      "║ F ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ F ║\n" +
+				                                      "║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║ P ║\n" +
 				                                      "╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣\n" +
-				                                      "║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║ F ║\n" +
+				                                      "║ F ║ F ║ F ║ P ║ P ║ P ║ F ║ F ║ F ║\n" +
 				                                      "╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
 
 		public static final MapProperty<MenuButton> PARTICLES_MENU_VALUES =

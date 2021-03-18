@@ -95,10 +95,13 @@ public final class Cost implements Comparable<Cost>
 
 	public @NotNull String toStringFormatted(@NotNull final Player player)
 	{
+		final String prefix = AcolytesPlugin.get().lang(player, getType().getPrefix());
+		final String suffix = AcolytesPlugin.get().lang(player, getType().getSuffix());
+
 		return String.format("%s%s%s",
-		                     AcolytesPlugin.get().lang(player, getType().getPrefix()),
+		                     prefix.trim().isEmpty() ? "" : prefix,
 		                     getCost().toPlainString(),
-		                     AcolytesPlugin.get().lang(player, getType().getSuffix()));
+		                     suffix.trim().isEmpty() ? "" : suffix);
 	}
 
 }

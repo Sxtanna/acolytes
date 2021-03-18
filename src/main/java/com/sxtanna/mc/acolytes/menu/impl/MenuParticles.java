@@ -17,6 +17,7 @@ import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
 import xyz.xenondevs.particle.ParticleEffect;
+import xyz.xenondevs.particle.utils.ReflectionUtils;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -71,8 +72,15 @@ public final class MenuParticles extends Menu
 
 		final Optional<Perk.Particles> current = pet.select(PetAttributes.PARTICLES);
 
-		final List<ParticleEffect> entries = Arrays.stream(ParticleEffect.values()).filter(effect -> !effect.getFieldName().equals("NONE")).collect(Collectors.toList());
-		System.out.println("available particles " + entries.size());
+		final List<ParticleEffect> entries = Arrays.stream(ParticleEffect.values())
+		                                           .filter(effect -> !effect.getFieldName().equals("NONE"))
+		                                           .collect(Collectors.toList());
+
+		if (ReflectionUtils.MINECRAFT_VERSION <= 8)
+		{
+			entries.remove(ParticleEffect.SWEEP_ATTACK); // bug in current version of the particle library
+		}
+
 
 		final Iterator<ParticleEffect> effects = entries.iterator();
 

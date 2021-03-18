@@ -22,6 +22,8 @@ public enum Lang implements MessageKeyProvider
 	CMDS__ADMIN__TAKE__SENDER,
 	CMDS__ADMIN__TAKE__TARGET,
 
+	CMDS__ADMIN__RELOAD,
+
 	MENU__SPAWNED,
 	MENU__REMOVED,
 

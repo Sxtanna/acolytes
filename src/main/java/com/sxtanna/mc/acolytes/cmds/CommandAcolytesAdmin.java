@@ -217,6 +217,7 @@ public final class CommandAcolytesAdmin extends BaseCommand
 	public void reload(@NotNull final CommandSender sender)
 	{
 		plugin.getConfiguration().reload();
+		plugin.send(sender, Lang.CMDS__ADMIN__RELOAD);
 	}
 
 }

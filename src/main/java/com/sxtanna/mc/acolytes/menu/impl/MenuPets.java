@@ -1,6 +1,7 @@
 package com.sxtanna.mc.acolytes.menu.impl;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,22 +11,23 @@ import com.sxtanna.mc.acolytes.conf.AcolytesConfig;
 import com.sxtanna.mc.acolytes.data.Pet;
 import com.sxtanna.mc.acolytes.data.attr.PetAttributes;
 import com.sxtanna.mc.acolytes.data.cost.Cost;
+import com.sxtanna.mc.acolytes.hook.Replace;
 import com.sxtanna.mc.acolytes.lang.Lang;
 import com.sxtanna.mc.acolytes.menu.Menu;
 import com.sxtanna.mc.acolytes.pets.controller.PetController;
+import com.sxtanna.mc.acolytes.util.bukkit.Format;
 import com.sxtanna.mc.acolytes.util.bukkit.Stacks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.sxtanna.mc.acolytes.util.bukkit.Colors.colorize;
-import static java.util.Arrays.asList;
 
 public final class MenuPets extends Menu
 {
@@ -82,9 +84,11 @@ public final class MenuPets extends Menu
 
 			for (final MenuCreationFunction function : functions)
 			{
+				final ItemStack buttonItem = button.getValue().getItemStack();
+
 				if (!button.getKey().equals(PETS_KEY) || !pets.hasNext())
 				{
-					function.accept(this, button.getValue().getItemStack(), event -> { });
+					function.accept(this, Stacks.meta(buttonItem, Stacks::clean), event -> { });
 					continue;
 				}
 
@@ -93,40 +97,11 @@ public final class MenuPets extends Menu
 
 				final ItemStack item = Stacks.meta(loaded.createHeadItem(plugin.getModule().getAdapter()), meta ->
 				{
-					String custom = null;
+					final String name = Replace.set(player, resolvePetItemName(buttonItem, loaded, target));
+					Stacks.name(meta, name);
 
-					if (target != null)
-					{
-						custom = target.select(PetAttributes.NAME).orElse(null);
-					}
-
-					if (custom == null)
-					{
-						custom = loaded.select(PetAttributes.NAME).orElse(null);
-					}
-
-					Stacks.name(meta,
-					            custom != null ? custom : loaded.getUuid());
-
-					final List<String> lore = new ArrayList<>(asList((target != null ?
-					                                                  plugin.lang(player, Lang.MENU__BUTTONS__HAS_GIVEN) :
-					                                                  plugin.lang(player, Lang.MENU__BUTTONS__NOT_GIVEN)).split("\n")));
-					if (target != null)
-					{
-						lore.addAll(asList((target.getEntity() != null ?
-						                    plugin.lang(player, Lang.MENU__BUTTONS__REMOVE) :
-						                    plugin.lang(player, Lang.MENU__BUTTONS__SUMMON)).split("\n")));
-
-						target.select(PetAttributes.PERK_EFFECT).ifPresent(perk -> {
-							lore.add(" ");
-							lore.add("&7" + perk.getName());
-						});
-
-						target.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(perk -> {
-							lore.add(" ");
-							lore.addAll(Arrays.stream(perk.getName().split("\n")).map(name -> "&7" + name).collect(Collectors.toList()));
-						});
-					}
+					final List<String> lore = resolvePetItemLore(buttonItem, target);
+					lore.replaceAll(line -> Replace.set(player, line));
 
 					Stacks.lore(meta, lore);
 				});
@@ -197,7 +172,87 @@ public final class MenuPets extends Menu
 				});
 			}
 		}
+	}
 
+
+	private @NotNull String resolvePetItemName(@NotNull final ItemStack buttonItem, @NotNull final Pet loaded, @Nullable final Pet target)
+	{
+		final String buttonName = Stacks.getName(buttonItem);
+
+		String custom = null;
+
+		if (target != null)
+		{
+			custom = target.select(PetAttributes.NAME).orElse(null);
+		}
+
+		if (custom == null)
+		{
+			custom = loaded.select(PetAttributes.NAME).orElse(loaded.getUuid());
+		}
+
+		if (buttonName != null)
+		{
+			custom = buttonName.replace("{pet_name}", custom);
+		}
+
+		return custom;
+	}
+
+	private @NotNull List<String> resolvePetItemLore(@NotNull final ItemStack buttonItem, @Nullable final Pet target)
+	{
+		final List<String> custom = new ArrayList<>();
+
+		for (final String line : Stacks.geLore(buttonItem))
+		{
+			final String lower = line.toLowerCase(Locale.ROOT);
+
+			if (lower.contains("{pet_status}"))
+			{
+				final String status = resolve(player, target == null ? Lang.MENU__BUTTONS__STATUS__NOT : Lang.MENU__BUTTONS__STATUS__HAS);
+				custom.addAll(Arrays.asList(line.replace("{pet_status}", status).split("\n")));
+			}
+
+			if (target != null)
+			{
+				if (lower.contains("{pet_action}"))
+				{
+					final String action = resolve(player, target.getEntity() == null ? Lang.MENU__BUTTONS__ACTION__SUMMON : Lang.MENU__BUTTONS__ACTION__REMOVE);
+					custom.addAll(Arrays.asList(line.replace("{pet_action}", action).split("\n")));
+				}
+
+				if (lower.contains("{pet_effect}"))
+				{
+					final String effect = resolve(player, Lang.MENU__BUTTONS__EFFECT__FORMAT);
+
+					target.select(PetAttributes.PERK_EFFECT).ifPresent(perk -> {
+						custom.add(" ");
+						custom.addAll(Arrays.asList(effect.replace("{effect_name}",
+						                                           Format.name(perk.getEffect().getType()))
+						                                  .replace("{effect_level}",
+						                                           String.valueOf(perk.getEffect().getAmplifier() + 1)).split("\n")));
+					});
+
+					target.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(perk -> {
+						custom.add(" ");
+						perk.getEffects().forEach(each -> {
+							custom.addAll(Arrays.asList(effect.replace("{effect_name}",
+							                                           Format.name(each.getType()))
+							                                  .replace("{effect_level}",
+							                                           String.valueOf(each.getAmplifier() + 1)).split("\n")));
+						});
+					});
+				}
+			}
+		}
+
+		return custom;
+	}
+
+
+	private @NotNull String resolve(@NotNull final Player player, @NotNull final Lang lang)
+	{
+		return plugin.lang(player, lang);
 	}
 
 }

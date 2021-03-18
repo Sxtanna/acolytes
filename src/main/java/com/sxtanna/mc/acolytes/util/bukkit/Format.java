@@ -44,10 +44,16 @@ public enum Format
 	}
 
 
+	public static @NotNull String name(@NotNull final PotionEffectType type)
+	{
+		return NAMES.getOrDefault(type, type.getName());
+	}
+
+
 	public static @NotNull String format(@NotNull final PotionEffect effect)
 	{
 		return String.format("&7%s &a%d",
-		                     NAMES.getOrDefault(effect.getType(), effect.getType().getName()),
+		                     name(effect.getType()),
 		                     (effect.getAmplifier() + 1));
 	}
 

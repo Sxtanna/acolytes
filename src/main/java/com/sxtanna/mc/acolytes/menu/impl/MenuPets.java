@@ -100,7 +100,7 @@ public final class MenuPets extends Menu
 					final String name = Replace.set(player, resolvePetItemName(buttonItem, loaded, target));
 					Stacks.name(meta, name);
 
-					final List<String> lore = resolvePetItemLore(buttonItem, target);
+					final List<String> lore = resolvePetItemLore(buttonItem, loaded, target);
 					lore.replaceAll(line -> Replace.set(player, line));
 
 					Stacks.lore(meta, lore);
@@ -199,7 +199,7 @@ public final class MenuPets extends Menu
 		return custom;
 	}
 
-	private @NotNull List<String> resolvePetItemLore(@NotNull final ItemStack buttonItem, @Nullable final Pet target)
+	private @NotNull List<String> resolvePetItemLore(@NotNull final ItemStack buttonItem, @NotNull final Pet loaded, @Nullable final Pet target)
 	{
 		final List<String> custom = new ArrayList<>();
 
@@ -213,37 +213,44 @@ public final class MenuPets extends Menu
 				custom.addAll(Arrays.asList(line.replace("{pet_status}", status).split("\n")));
 			}
 
-			if (target != null)
+			if (lower.contains("{pet_action}"))
 			{
-				if (lower.contains("{pet_action}"))
-				{
-					final String action = resolve(player, target.getEntity() == null ? Lang.MENU__BUTTONS__ACTION__SUMMON : Lang.MENU__BUTTONS__ACTION__REMOVE);
-					custom.addAll(Arrays.asList(line.replace("{pet_action}", action).split("\n")));
-				}
+				final String action = resolve(player, target == null ? Lang.MENU__BUTTONS__ACTION__OBTAIN : target.getEntity() == null ? Lang.MENU__BUTTONS__ACTION__SUMMON : Lang.MENU__BUTTONS__ACTION__REMOVE);
 
-				if (lower.contains("{pet_effect}"))
-				{
-					final String effect = resolve(player, Lang.MENU__BUTTONS__EFFECT__FORMAT);
-
-					target.select(PetAttributes.PERK_EFFECT).ifPresent(perk -> {
-						custom.add(" ");
-						custom.addAll(Arrays.asList(effect.replace("{effect_name}",
-						                                           Format.name(perk.getEffect().getType()))
-						                                  .replace("{effect_level}",
-						                                           String.valueOf(perk.getEffect().getAmplifier() + 1)).split("\n")));
-					});
-
-					target.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(perk -> {
-						custom.add(" ");
-						perk.getEffects().forEach(each -> {
-							custom.addAll(Arrays.asList(effect.replace("{effect_name}",
-							                                           Format.name(each.getType()))
-							                                  .replace("{effect_level}",
-							                                           String.valueOf(each.getAmplifier() + 1)).split("\n")));
-						});
-					});
-				}
+				custom.addAll(Arrays.asList(line.replace("{pet_action}", action)
+				                                .replace("{cost}", loaded.select(PetAttributes.COST).orElse(Cost.FREE).toStringFormatted(player))
+				                                .split("\n")));
 			}
+
+			if (lower.contains("{pet_effect}"))
+			{
+				if (target == null)
+				{
+					continue;
+				}
+
+				final String effect = resolve(player, Lang.MENU__BUTTONS__EFFECT__FORMAT);
+
+				target.select(PetAttributes.PERK_EFFECT).ifPresent(perk -> {
+					custom.add(" ");
+					custom.addAll(Arrays.asList(effect.replace("{effect_name}",
+					                                           Format.name(perk.getEffect().getType()))
+					                                  .replace("{effect_level}",
+					                                           String.valueOf(perk.getEffect().getAmplifier() + 1)).split("\n")));
+				});
+
+				target.select(PetAttributes.PERK_EFFECT_GROUP).ifPresent(perk -> {
+					custom.add(" ");
+					perk.getEffects().forEach(each -> {
+						custom.addAll(Arrays.asList(effect.replace("{effect_name}",
+						                                           Format.name(each.getType()))
+						                                  .replace("{effect_level}",
+						                                           String.valueOf(each.getAmplifier() + 1)).split("\n")));
+					});
+				});
+			}
+
+
 		}
 
 		return custom;

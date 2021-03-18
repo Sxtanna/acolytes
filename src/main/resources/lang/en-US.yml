@@ -27,6 +27,7 @@ menu:
     action:
       summon: " \n&7Click to Summon!"
       remove: " \n&7Click to Send Away!"
+      obtain: " \n&7Click to purchase for&r {cost}"
     effect:
       format: "  &7{effect_name}\n  &a{effect_level}"
 

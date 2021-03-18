@@ -21,10 +21,14 @@ menu:
     success: "&7Successfully purchased&r {pet_name}&r &7for&r {cost}&r"
     failure: "&7Failed to purchase&r {pet_name}&r&7: &c{reason}&r"
   buttons:
-    has-given: "  &aUnlocked"
-    not-given: "  &7Locked"
-    summon: " \n&7Click to Summon!"
-    remove: " \n&7Click to Send Away!"
+    status:
+      not: "&7Locked"
+      has: "&aUnlocked"
+    action:
+      summon: " \n&7Click to Summon!"
+      remove: " \n&7Click to Send Away!"
+    effect:
+      format: "  &7{effect_name}\n  &a{effect_level}"
 
 cost:
   prefix:

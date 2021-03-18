@@ -238,12 +238,10 @@ public final class PetControllerLocal implements PetController, Listener
 	public boolean take(@NotNull final Player player, @NotNull final Pet pet)
 	{
 		final Map<String, Pet> pets = this.cached.get(player.getUniqueId());
-		if (pets == null || pets.isEmpty())
+		if (pets == null || pets.isEmpty() || pets.remove(pet.getUuid()) == null)
 		{
 			return false;
 		}
-
-		pets.remove(pet.getUuid());
 
 		save(player, false);
 
